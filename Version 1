@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -566,7 +565,36 @@ flex-shrink:0;text-shadow:0 1px 3px rgba(0,0,0,.5)}
 }
 .moldy-emoji{font-size:52px;display:block;margin-bottom:4px}
 
-/* ── GOLDEN INGREDIENT ───────────────────────────────────────── */
+/* ── BURNT MECHANIC ──────────────────────────────────────────── */
+.burnt-dot{
+  position:absolute;top:4px;right:4px;
+  width:9px;height:9px;border-radius:50%;
+  background:#E65100;border:1.5px solid #8B2500;
+  box-shadow:0 0 5px rgba(230,81,0,.9),0 0 10px rgba(230,81,0,.5);
+  animation:burntPulse 1s ease-in-out infinite;
+  z-index:5;pointer-events:none
+}
+@keyframes burntPulse{
+  0%,100%{box-shadow:0 0 4px rgba(230,81,0,.7),0 0 8px rgba(230,81,0,.3)}
+  50%    {box-shadow:0 0 12px rgba(230,81,0,1),0 0 24px rgba(230,81,0,.7)}
+}
+#burnt-popup{
+  position:fixed;top:38%;left:50%;transform:translate(-50%,-50%) scale(0);
+  z-index:9999;text-align:center;pointer-events:none;
+  animation:burntPop .25s cubic-bezier(.34,1.56,.64,1) forwards,
+            burntFade .35s .9s ease-in forwards
+}
+@keyframes burntPop{to{transform:translate(-50%,-50%) scale(1)}}
+@keyframes burntFade{to{opacity:0}}
+.burnt-text{
+  font-size:44px;font-weight:900;
+  color:#FF6D00;-webkit-text-stroke:2px #8B2500;
+  text-shadow:0 4px 12px rgba(0,0,0,.6);
+  line-height:1
+}
+.burnt-emoji{font-size:52px;display:block;margin-bottom:4px}
+
+
 .tile.golden{
   border-color:#FFD700!important;
   box-shadow:0 0 14px rgba(255,215,0,.9),0 0 28px rgba(255,215,0,.5),
@@ -1146,6 +1174,23 @@ flex-shrink:0;text-shadow:0 1px 3px rgba(0,0,0,.5)}
         <div class="setting-label" style="color:#FF6B6B">🗑️ Help deleting account</div>
         <button onclick="showDeleteHelp()" style="background:rgba(255,100,100,.15);border:1px solid rgba(255,100,100,.4);color:#FF6B6B;font-size:10px;font-weight:700;padding:5px 10px;border-radius:8px;cursor:pointer;white-space:nowrap;touch-action:manipulation">Open</button>
       </div>
+      <div class="setting-row" style="border-bottom:none;flex-direction:column;align-items:stretch;gap:6px">
+        <div class="setting-label" style="color:#FFD700">🔑 Password</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input id="promo-input" type="password" placeholder="Enter code…"
+            style="flex:1;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,215,0,.35);
+                   border-radius:10px;padding:8px 12px;color:#fff;font-size:14px;outline:none;
+                   font-family:inherit;letter-spacing:.5px"
+            onkeydown="if(event.key==='Enter')redeemCode()"/>
+          <button onclick="redeemCode()"
+            style="background:linear-gradient(135deg,#FF8C00,#D43010);border:none;color:#fff;
+                   font-size:12px;font-weight:700;padding:8px 14px;border-radius:10px;
+                   cursor:pointer;white-space:nowrap;touch-action:manipulation">
+            Redeem
+          </button>
+        </div>
+        <div id="promo-msg" style="font-size:11px;text-align:center;min-height:14px;color:#aaa"></div>
+      </div>
       <button class="modal-close" id="settings-close">Close</button>
     </div>
   </div>
@@ -1616,6 +1661,192 @@ var SFX = {
   golden:   function() { [523,659,784,1047,1319].forEach(function(f,i){ playNote(f,.28,'sine',.4,i*.09); }); }
 };
 function vib(pattern) { if (vibeOn && navigator.vibrate) navigator.vibrate(pattern); }
+
+/* ═══════════════════════════════════════════════════════════════
+   EXTENDED SFX — Missing sounds added 2025
+   Each entry has a comment showing its purpose.
+   To swap any sound for an audio file, replace the function body:
+     SFX_EXT.btnTap = function() { playAudioFile('your-file.mp3'); };
+   Or load a file into a pool:
+     var _snd_btnTap = new Audio('your-sound.mp3');
+     SFX_EXT.btnTap = function() { _snd_btnTap.currentTime=0; _snd_btnTap.play(); };
+═══════════════════════════════════════════════════════════════ */
+var SFX_EXT = {
+
+  /* ── UI / NAVIGATION ─────────────────────────────────────── */
+
+  // Every button press — menu buttons, nav, shop buttons
+  btnTap: function() {
+    playNote(600,.05,'sine',.18);
+    playNote(900,.04,'sine',.10,.04);
+  },
+
+  // Opening any modal/menu (settings, store, profile)
+  menuOpen: function() {
+    playNote(400,.06,'sine',.15);
+    playNote(600,.06,'sine',.18,.05);
+    playNote(900,.10,'sine',.22,.10);
+  },
+
+  // Closing any modal/menu
+  menuClose: function() {
+    playNote(900,.06,'sine',.18);
+    playNote(600,.06,'sine',.15,.05);
+    playNote(350,.10,'sine',.12,.10);
+  },
+
+  /* ── INGREDIENT SELECTION (per ingredient type) ─────────── */
+  // Each ingredient gets a distinct "juicy" pop sound
+
+  // Bun — thunk (low, solid)
+  selectBun: function() {
+    playNote(140,.12,'triangle',.28);
+    playNote(200,.08,'sine',.15,.06);
+  },
+
+  // Patty / meat — sizzle-pop (mid, punchy)
+  selectPatty: function() {
+    playNote(220,.10,'sawtooth',.20);
+    playNote(330,.07,'sine',.18,.05);
+  },
+
+  // Tomato — plop (round, soft)
+  selectTomato: function() {
+    playNote(350,.09,'sine',.22);
+    playNote(280,.06,'sine',.14,.06);
+  },
+
+  // Cheese — squish (soft mid)
+  selectCheese: function() {
+    playNote(300,.11,'triangle',.20);
+    playNote(420,.07,'sine',.12,.07);
+  },
+
+  // Lettuce — light crisp
+  selectLettuce: function() {
+    playNote(500,.07,'sine',.16);
+    playNote(700,.05,'sine',.10,.04);
+  },
+
+  // Generic ingredient fallback (any item not listed above)
+  selectItem: function() {
+    playNote(440,.08,'sine',.20);
+    playNote(620,.06,'sine',.14,.05);
+  },
+
+  /* ── ITEM PLACED ON MEAL ─────────────────────────────────── */
+  // Satisfying stack sound — "tok"
+  itemPlaced: function() {
+    playNote(800,.04,'square',.22);
+    playNote(600,.06,'sine',.18,.03);
+  },
+
+  /* ── COINS ───────────────────────────────────────────────── */
+  // Single coin earned — "ching"
+  coinEarned: function() {
+    playNote(1200,.06,'sine',.25);
+    playNote(1600,.08,'sine',.20,.05);
+  },
+
+  // Large coin reward — layered "ching ching ching"
+  coinLarge: function() {
+    playNote(1200,.06,'sine',.25);
+    playNote(1600,.08,'sine',.22,.08);
+    playNote(1200,.06,'sine',.20,.16);
+    playNote(1600,.08,'sine',.22,.24);
+    playNote(2000,.12,'sine',.28,.32);
+  },
+
+  /* ── LEVEL FLOW ──────────────────────────────────────────── */
+  // Short fanfare at level start — "Da-da!" (~0.5s)
+  levelStart: function() {
+    playNote(523,.10,'sine',.28);
+    playNote(659,.10,'sine',.28,.12);
+    playNote(784,.18,'sine',.32,.24);
+  },
+
+  // Level failed — soft descending "dooo..." (never harsh)
+  levelFail: function() {
+    playNote(350,.20,'sine',.22);
+    playNote(280,.22,'sine',.20,.18);
+    playNote(200,.30,'sine',.18,.36);
+    playNote(140,.40,'triangle',.15,.58);
+  },
+
+  /* ── SPIN WHEEL ──────────────────────────────────────────── */
+  // Wheel jackpot — big reveal "DA DA DAAAAA!"
+  wheelJackpot: function() {
+    playNote(523,.10,'sine',.30);
+    playNote(659,.10,'sine',.32,.10);
+    playNote(784,.10,'sine',.34,.20);
+    playNote(1047,.20,'sine',.38,.30);
+    playNote(1319,.30,'sine',.42,.50);
+    playNote(1568,.40,'sine',.45,.75);
+  },
+
+  /* ── PLAYER LEVEL UP ─────────────────────────────────────── */
+  // "Ding Ding DINGGGG" — rising celebration
+  playerLevelUp: function() {
+    playNote(784,.12,'sine',.30);
+    playNote(784,.12,'sine',.32,.20);
+    playNote(1047,.18,'sine',.36,.40);
+    playNote(1319,.25,'sine',.40,.60);
+    playNote(1568,.40,'sine',.48,.85);
+  },
+
+  /* ── DAILY REWARD ────────────────────────────────────────── */
+  // Calendar opens — whoosh
+  dailyOpen: function() {
+    [300,450,650,900].forEach(function(f,i){ playNote(f,.07,'sine',.16,i*.04); });
+  },
+
+  // Daily reward claimed — sparkle + coin chime
+  dailyClaim: function() {
+    [900,1200,1600,1200,900].forEach(function(f,i){ playNote(f,.08,'sine',.18,i*.06); });
+    playNote(1600,.12,'sine',.28,.40);
+  },
+
+  /* ── STORE ───────────────────────────────────────────────── */
+  // Store opens — cash register pop
+  storeOpen: function() {
+    playNote(300,.05,'square',.20);
+    playNote(600,.06,'square',.22,.04);
+    playNote(1000,.10,'sine',.25,.08);
+  },
+
+  // Purchase success — "Cha-Ching!"
+  purchaseSuccess: function() {
+    playNote(800,.06,'square',.25);
+    playNote(1200,.08,'sine',.30,.06);
+    playNote(1600,.12,'sine',.35,.12);
+    playNote(2000,.18,'sine',.40,.22);
+  },
+
+  /* ── RARE / CHEF UNLOCK ──────────────────────────────────── */
+  // New chef unlocked — magical rise + sparkle explosion
+  chefUnlock: function() {
+    [262,330,392,523,659,784,1047,1319].forEach(function(f,i){
+      playNote(f,.16,'sine',.28,i*.07);
+    });
+    // sparkle burst at the top
+    [1568,1760,2093,1760,1568].forEach(function(f,i){
+      playNote(f,.10,'sine',.22,.60+i*.05);
+    });
+  }
+
+};
+
+/* ─── Helper: play a custom audio file (optional override) ───
+   Usage: SFX_EXT.btnTap = function(){ playAudioFile('tap.mp3'); };
+   Files should be hosted or embedded as base64 data URIs.        */
+function playAudioFile(src) {
+  if (!soundOn) return;
+  try {
+    var a = new Audio(src);
+    a.volume = 0.7;
+    a.play().catch(function(){});
+  } catch(e) {}
+}
 
 /* ═════════════════════════════════════════════════════════════
    ECONOMY ENGINE — coins + hearts, persisted to localStorage
@@ -2251,6 +2482,8 @@ function showScreen(id) {
   });
   var s = document.getElementById(id);
   if (s) s.classList.add('active'); /* immediate — no RAF delay */
+  /* Re-enable bird spawning when player returns to welcome screen */
+  if (id === 'welcome') { window._birdsActive = true; }
 }
 
 /* ═══════════════════════════════════════════
@@ -2268,6 +2501,81 @@ var _el_settings_modal = document.getElementById('settings-modal');
 if (_el_settings_modal) _el_settings_modal.addEventListener('click', function(e) {
   if (e.target === this) this.classList.remove('open');
 });
+
+/* ═══════════════════════════════════════════
+   PASSWORD / CODE REDEMPTION
+   Add new codes here anytime — key:value
+   Actions: unlockAll, hearts:N, levels:N, coins:N
+═══════════════════════════════════════════ */
+var PROMO_CODES = {
+  /* ── Dev / Admin ── */
+  'BURGDEV99':    { action:'unlockAll',  msg:'🔓 All levels unlocked!' },
+  /* ── Heart gifts ── */
+  'HEARTX5':      { action:'hearts',    amount:5,   msg:'❤️ +5 Hearts added!' },
+  'HEARTX10':     { action:'hearts',    amount:10,  msg:'❤️ +10 Hearts added!' },
+  /* ── Coin gifts ── */
+  'COINS500':     { action:'coins',     amount:500, msg:'🪙 +500 Coins added!' },
+  'COINS1000':    { action:'coins',     amount:1000,msg:'🪙 +1000 Coins added!' },
+  /* ── Level unlocks ── */
+  'SKIP10':       { action:'levels',    amount:10,  msg:'🔓 10 levels unlocked!' },
+  'SKIP25':       { action:'levels',    amount:25,  msg:'🔓 25 levels unlocked!' },
+  /* ── Add your own below ── */
+};
+
+var _usedCodes = (function() {
+  try { return JSON.parse(localStorage.getItem('bdw_used_codes') || '[]'); } catch(e) { return []; }
+})();
+
+function redeemCode() {
+  var inp = document.getElementById('promo-input');
+  var msg = document.getElementById('promo-msg');
+  if (!inp || !msg) return;
+  var code = inp.value.trim().toUpperCase();
+  if (!code) { _promoMsg('Enter a code first.', '#aaa'); return; }
+
+  /* Already used */
+  if (_usedCodes.indexOf(code) >= 0) {
+    _promoMsg('Code already used.', '#E74C3C'); return;
+  }
+  /* Not found */
+  var entry = PROMO_CODES[code];
+  if (!entry) {
+    _promoMsg('Invalid code.', '#E74C3C'); return;
+  }
+
+  /* Apply reward */
+  if (entry.action === 'unlockAll') {
+    G.maxUnlocked = 99;
+    saveProgress();
+    renderLevelSelect();
+  } else if (entry.action === 'hearts') {
+    for (var h = 0; h < entry.amount; h++) Economy.addHearts(1);
+    Economy._ui();
+  } else if (entry.action === 'coins') {
+    Economy.coins += entry.amount;
+    Economy._save(); Economy._ui();
+  } else if (entry.action === 'levels') {
+    G.maxUnlocked = Math.min(99, G.maxUnlocked + entry.amount);
+    saveProgress();
+    renderLevelSelect();
+  }
+
+  /* Mark used */
+  _usedCodes.push(code);
+  try { localStorage.setItem('bdw_used_codes', JSON.stringify(_usedCodes)); } catch(e) {}
+
+  inp.value = '';
+  _promoMsg(entry.msg, '#27AE60');
+  if (typeof SFX_EXT !== 'undefined') SFX_EXT.purchaseSuccess();
+}
+
+function _promoMsg(text, color) {
+  var msg = document.getElementById('promo-msg');
+  if (!msg) return;
+  msg.textContent = text;
+  msg.style.color = color || '#aaa';
+  setTimeout(function() { if(msg) msg.textContent = ''; }, 3500);
+}
 var _el_sound_toggle = document.getElementById('sound-toggle');
 if (_el_sound_toggle) _el_sound_toggle.addEventListener('click', function() {
   soundOn = !soundOn;
@@ -2426,105 +2734,105 @@ var REC = {
 };
 
 var LEVELS = [
-  {id:1,meal:'hamburger',duration:45,mystery:0,mealCount:1,label:'Level 1',emoji:'\uD83C\uDF54'},
-  {id:2,meal:'hotdog',duration:44,mystery:0,mealCount:2,label:'Level 2',emoji:'\uD83C\uDF2D'},
-  {id:3,meal:'sandwich',duration:43,mystery:0,mealCount:3,label:'Level 3',emoji:'\uD83E\uDD6A'},
-  {id:4,meal:'sandwich',duration:42,mystery:0,mealCount:4,label:'Level 4',emoji:'\uD83E\uDD6A'},
-  {id:5,meal:'breakfast',duration:40,mystery:0,mealCount:1,label:'CHEF BREAKFAST',emoji:'\uD83C\uDF73'},
-  {id:6,meal:'hotdog',duration:39,mystery:0,mealCount:6,label:'Level 6',emoji:'\uD83C\uDF2D'},
-  {id:7,meal:'hotdog',duration:38,mystery:0,mealCount:7,label:'Level 7',emoji:'\uD83C\uDF2D'},
-  {id:8,meal:'sandwich',duration:37,mystery:0,mealCount:8,label:'Level 8',emoji:'\uD83E\uDD6A'},
-  {id:9,meal:'hamburger',duration:36,mystery:0,mealCount:9,label:'Level 9',emoji:'\uD83C\uDF54'},
-  {id:10,meal:'meatorama',duration:35,mystery:1,mealCount:1,label:'MEAT-O-RAMA',emoji:'\uD83E\uDD69'},
-  {id:11,meal:'sandwich',duration:34,mystery:1,mealCount:12,label:'Level 11',emoji:'\uD83E\uDD6A'},
-  {id:12,meal:'hotdog',duration:32,mystery:1,mealCount:12,label:'Level 12',emoji:'\uD83C\uDF2D'},
-  {id:13,meal:'hotdog',duration:31,mystery:1,mealCount:12,label:'Level 13',emoji:'\uD83C\uDF2D'},
-  {id:14,meal:'hamburger',duration:30,mystery:1,mealCount:12,label:'Level 14',emoji:'\uD83C\uDF54'},
-  {id:15,meal:'taco',duration:29,mystery:1,mealCount:1,label:'TACO TUESDAY',emoji:'\uD83C\uDF2E'},
-  {id:16,meal:'sandwich',duration:28,mystery:1,mealCount:12,label:'Level 16',emoji:'\uD83E\uDD6A'},
-  {id:17,meal:'hotdog',duration:27,mystery:1,mealCount:12,label:'Level 17',emoji:'\uD83C\uDF2D'},
-  {id:18,meal:'hamburger',duration:26,mystery:1,mealCount:12,label:'Level 18',emoji:'\uD83C\uDF54'},
-  {id:19,meal:'hamburger',duration:25,mystery:1,mealCount:12,label:'Level 19',emoji:'\uD83C\uDF54'},
-  {id:20,meal:'veggie',duration:23,mystery:2,mealCount:1,label:'CHEF VEGGIE',emoji:'\uD83E\uDD57'},
-  {id:21,meal:'sandwich',duration:22,mystery:2,mealCount:12,label:'Level 21',emoji:'\uD83E\uDD6A'},
-  {id:22,meal:'hotdog',duration:21,mystery:2,mealCount:12,label:'Level 22',emoji:'\uD83C\uDF2D'},
-  {id:23,meal:'sandwich',duration:20,mystery:2,mealCount:12,label:'Level 23',emoji:'\uD83E\uDD6A'},
-  {id:24,meal:'hamburger',duration:19,mystery:2,mealCount:12,label:'Level 24',emoji:'\uD83C\uDF54'},
-  {id:25,meal:'pizza',duration:18,mystery:2,mealCount:1,label:'CHEF PIZZA',emoji:'\uD83C\uDF55'},
-  {id:26,meal:'hamburger',duration:17,mystery:2,mealCount:12,label:'Level 26',emoji:'\uD83C\uDF54'},
-  {id:27,meal:'hotdog',duration:15,mystery:2,mealCount:12,label:'Level 27',emoji:'\uD83C\uDF2D'},
-  {id:28,meal:'hamburger',duration:14,mystery:2,mealCount:12,label:'Level 28',emoji:'\uD83C\uDF54'},
-  {id:29,meal:'hotdog',duration:13,mystery:2,mealCount:12,label:'Level 29',emoji:'\uD83C\uDF2D'},
-  {id:30,meal:'candy',duration:12,mystery:3,mealCount:1,label:'CANDY CHEF',emoji:'\uD83C\uDF6C'},
-  {id:31,meal:'hamburger',duration:12,mystery:3,mealCount:15,label:'Level 31',emoji:'\uD83C\uDF54'},
-  {id:32,meal:'sandwich',duration:12,mystery:3,mealCount:15,label:'Level 32',emoji:'\uD83E\uDD6A'},
-  {id:33,meal:'hotdog',duration:12,mystery:3,mealCount:15,label:'Level 33',emoji:'\uD83C\uDF2D'},
-  {id:34,meal:'sandwich',duration:12,mystery:3,mealCount:15,label:'Level 34',emoji:'\uD83E\uDD6A'},
-  {id:35,meal:'sea',duration:12,mystery:3,mealCount:1,label:'CHEF SEA',emoji:'\uD83D\uDC1F'},
-  {id:36,meal:'hamburger',duration:12,mystery:3,mealCount:15,label:'Level 36',emoji:'\uD83C\uDF54'},
-  {id:37,meal:'hotdog',duration:12,mystery:3,mealCount:15,label:'Level 37',emoji:'\uD83C\uDF2D'},
-  {id:38,meal:'hamburger',duration:12,mystery:3,mealCount:15,label:'Level 38',emoji:'\uD83C\uDF54'},
-  {id:39,meal:'hamburger',duration:12,mystery:3,mealCount:15,label:'Level 39',emoji:'\uD83C\uDF54'},
-  {id:40,meal:'breakfast',duration:12,mystery:4,mealCount:1,label:'CHEF BREAKFAST',emoji:'\uD83C\uDF73'},
-  {id:41,meal:'sandwich',duration:12,mystery:4,mealCount:15,label:'Level 41',emoji:'\uD83E\uDD6A'},
-  {id:42,meal:'hotdog',duration:12,mystery:4,mealCount:15,label:'Level 42',emoji:'\uD83C\uDF2D'},
-  {id:43,meal:'hamburger',duration:12,mystery:4,mealCount:15,label:'Level 43',emoji:'\uD83C\uDF54'},
-  {id:44,meal:'hamburger',duration:12,mystery:4,mealCount:15,label:'Level 44',emoji:'\uD83C\uDF54'},
-  {id:45,meal:'meatorama',duration:12,mystery:4,mealCount:1,label:'MEAT-O-RAMA',emoji:'\uD83E\uDD69'},
-  {id:46,meal:'hotdog',duration:12,mystery:4,mealCount:15,label:'Level 46',emoji:'\uD83C\uDF2D'},
-  {id:47,meal:'hotdog',duration:12,mystery:4,mealCount:15,label:'Level 47',emoji:'\uD83C\uDF2D'},
-  {id:48,meal:'sandwich',duration:12,mystery:4,mealCount:15,label:'Level 48',emoji:'\uD83E\uDD6A'},
-  {id:49,meal:'hotdog',duration:12,mystery:4,mealCount:15,label:'Level 49',emoji:'\uD83C\uDF2D'},
-  {id:50,meal:'taco',duration:12,mystery:4,mealCount:1,label:'TACO TUESDAY',emoji:'\uD83C\uDF2E'},
-  {id:51,meal:'hamburger',duration:12,mystery:4,mealCount:15,label:'Level 51',emoji:'\uD83C\uDF54'},
-  {id:52,meal:'hamburger',duration:12,mystery:4,mealCount:15,label:'Level 52',emoji:'\uD83C\uDF54'},
-  {id:53,meal:'hotdog',duration:12,mystery:4,mealCount:15,label:'Level 53',emoji:'\uD83C\uDF2D'},
-  {id:54,meal:'hamburger',duration:12,mystery:4,mealCount:15,label:'Level 54',emoji:'\uD83C\uDF54'},
-  {id:55,meal:'veggie',duration:12,mystery:4,mealCount:1,label:'CHEF VEGGIE',emoji:'\uD83E\uDD57'},
-  {id:56,meal:'hotdog',duration:12,mystery:4,mealCount:15,label:'Level 56',emoji:'\uD83C\uDF2D'},
-  {id:57,meal:'sandwich',duration:12,mystery:4,mealCount:15,label:'Level 57',emoji:'\uD83E\uDD6A'},
-  {id:58,meal:'sandwich',duration:12,mystery:4,mealCount:15,label:'Level 58',emoji:'\uD83E\uDD6A'},
-  {id:59,meal:'hotdog',duration:12,mystery:4,mealCount:15,label:'Level 59',emoji:'\uD83C\uDF2D'},
-  {id:60,meal:'pizza',duration:12,mystery:4,mealCount:1,label:'CHEF PIZZA',emoji:'\uD83C\uDF55'},
-  {id:61,meal:'sandwich',duration:12,mystery:4,mealCount:20,label:'Level 61',emoji:'\uD83E\uDD6A'},
-  {id:62,meal:'hamburger',duration:12,mystery:4,mealCount:20,label:'Level 62',emoji:'\uD83C\uDF54'},
-  {id:63,meal:'sandwich',duration:12,mystery:4,mealCount:20,label:'Level 63',emoji:'\uD83E\uDD6A'},
-  {id:64,meal:'hamburger',duration:12,mystery:4,mealCount:20,label:'Level 64',emoji:'\uD83C\uDF54'},
-  {id:65,meal:'candy',duration:12,mystery:4,mealCount:1,label:'CANDY CHEF',emoji:'\uD83C\uDF6C'},
-  {id:66,meal:'hamburger',duration:12,mystery:4,mealCount:20,label:'Level 66',emoji:'\uD83C\uDF54'},
-  {id:67,meal:'hamburger',duration:12,mystery:4,mealCount:20,label:'Level 67',emoji:'\uD83C\uDF54'},
-  {id:68,meal:'sandwich',duration:12,mystery:4,mealCount:20,label:'Level 68',emoji:'\uD83E\uDD6A'},
-  {id:69,meal:'sandwich',duration:12,mystery:4,mealCount:20,label:'Level 69',emoji:'\uD83E\uDD6A'},
-  {id:70,meal:'sea',duration:12,mystery:4,mealCount:1,label:'CHEF SEA',emoji:'\uD83D\uDC1F'},
-  {id:71,meal:'sandwich',duration:12,mystery:4,mealCount:20,label:'Level 71',emoji:'\uD83E\uDD6A'},
-  {id:72,meal:'hotdog',duration:12,mystery:4,mealCount:20,label:'Level 72',emoji:'\uD83C\uDF2D'},
-  {id:73,meal:'sandwich',duration:12,mystery:4,mealCount:20,label:'Level 73',emoji:'\uD83E\uDD6A'},
-  {id:74,meal:'hotdog',duration:12,mystery:4,mealCount:20,label:'Level 74',emoji:'\uD83C\uDF2D'},
-  {id:75,meal:'breakfast',duration:12,mystery:4,mealCount:1,label:'CHEF BREAKFAST',emoji:'\uD83C\uDF73'},
-  {id:76,meal:'sandwich',duration:12,mystery:4,mealCount:20,label:'Level 76',emoji:'\uD83E\uDD6A'},
-  {id:77,meal:'sandwich',duration:12,mystery:4,mealCount:20,label:'Level 77',emoji:'\uD83E\uDD6A'},
-  {id:78,meal:'hotdog',duration:12,mystery:4,mealCount:20,label:'Level 78',emoji:'\uD83C\uDF2D'},
-  {id:79,meal:'hotdog',duration:12,mystery:4,mealCount:20,label:'Level 79',emoji:'\uD83C\uDF2D'},
-  {id:80,meal:'meatorama',duration:12,mystery:4,mealCount:1,label:'MEAT-O-RAMA',emoji:'\uD83E\uDD69'},
-  {id:81,meal:'hamburger',duration:12,mystery:4,mealCount:20,label:'Level 81',emoji:'\uD83C\uDF54'},
-  {id:82,meal:'sandwich',duration:12,mystery:4,mealCount:20,label:'Level 82',emoji:'\uD83E\uDD6A'},
-  {id:83,meal:'hamburger',duration:12,mystery:4,mealCount:20,label:'Level 83',emoji:'\uD83C\uDF54'},
-  {id:84,meal:'hamburger',duration:12,mystery:4,mealCount:20,label:'Level 84',emoji:'\uD83C\uDF54'},
-  {id:85,meal:'taco',duration:12,mystery:4,mealCount:1,label:'TACO TUESDAY',emoji:'\uD83C\uDF2E'},
-  {id:86,meal:'hotdog',duration:12,mystery:4,mealCount:20,label:'Level 86',emoji:'\uD83C\uDF2D'},
-  {id:87,meal:'hamburger',duration:12,mystery:4,mealCount:20,label:'Level 87',emoji:'\uD83C\uDF54'},
-  {id:88,meal:'hotdog',duration:12,mystery:4,mealCount:20,label:'Level 88',emoji:'\uD83C\uDF2D'},
-  {id:89,meal:'sandwich',duration:12,mystery:4,mealCount:20,label:'Level 89',emoji:'\uD83E\uDD6A'},
-  {id:90,meal:'veggie',duration:12,mystery:4,mealCount:1,label:'CHEF VEGGIE',emoji:'\uD83E\uDD57'},
-  {id:91,meal:'hotdog',duration:12,mystery:4,mealCount:20,label:'Level 91',emoji:'\uD83C\uDF2D'},
-  {id:92,meal:'hamburger',duration:12,mystery:4,mealCount:20,label:'Level 92',emoji:'\uD83C\uDF54'},
-  {id:93,meal:'sandwich',duration:12,mystery:4,mealCount:20,label:'Level 93',emoji:'\uD83E\uDD6A'},
-  {id:94,meal:'hamburger',duration:12,mystery:4,mealCount:20,label:'Level 94',emoji:'\uD83C\uDF54'},
-  {id:95,meal:'pizza',duration:12,mystery:4,mealCount:1,label:'CHEF PIZZA',emoji:'\uD83C\uDF55'},
-  {id:96,meal:'hotdog',duration:12,mystery:4,mealCount:20,label:'Level 96',emoji:'\uD83C\uDF2D'},
-  {id:97,meal:'hotdog',duration:12,mystery:4,mealCount:20,label:'Level 97',emoji:'\uD83C\uDF2D'},
-  {id:98,meal:'hamburger',duration:12,mystery:4,mealCount:20,label:'Level 98',emoji:'\uD83C\uDF54'},
-  {id:99,meal:'hamburger',duration:12,mystery:4,mealCount:20,label:'Level 99',emoji:'\uD83C\uDF54'}
+  {id:1,meal:'hamburger',duration:45,mystery:0,mealCount:1,label:'Level 1',emoji:'\uD83C\uDF54',mode:'timed'},
+  {id:2,meal:'hotdog',duration:40,mystery:0,mealCount:2,label:'Level 2',emoji:'\uD83C\uDF2D',mode:'timed'},
+  {id:3,meal:'sandwich',duration:43,mystery:0,mealCount:3,label:'Level 3',emoji:'\uD83E\uDD6A',mode:'moves',maxTaps:25},
+  {id:4,meal:'sandwich',duration:35,mystery:0,mealCount:4,label:'Level 4',emoji:'\uD83E\uDD6A',mode:'timed'},
+  {id:5,meal:'breakfast',duration:40,mystery:0,mealCount:1,label:'CHEF BREAKFAST',emoji:'\uD83C\uDF73',mode:'timed'},
+  {id:6,meal:'hotdog',duration:30,mystery:0,mealCount:6,label:'Level 6',emoji:'\uD83C\uDF2D',mode:'timed'},
+  {id:7,meal:'hotdog',duration:28,mystery:0,mealCount:7,label:'Level 7',emoji:'\uD83C\uDF2D',mode:'timed'},
+  {id:8,meal:'sandwich',duration:37,mystery:0,mealCount:8,label:'Level 8',emoji:'\uD83E\uDD6A',mode:'moves',maxTaps:62},
+  {id:9,meal:'hamburger',duration:25,mystery:0,mealCount:9,label:'Level 9',emoji:'\uD83C\uDF54',mode:'timed'},
+  {id:10,meal:'meatorama',duration:30,mystery:1,mealCount:1,label:'MEAT-O-RAMA',emoji:'\uD83E\uDD69',mode:'timed'},
+  {id:11,meal:'sandwich',duration:25,mystery:1,mealCount:12,label:'Level 11',emoji:'\uD83E\uDD6A',mode:'timed'},
+  {id:12,meal:'hotdog',duration:24,mystery:1,mealCount:12,label:'Level 12',emoji:'\uD83C\uDF2D',mode:'timed'},
+  {id:13,meal:'hotdog',duration:31,mystery:1,mealCount:12,label:'Level 13',emoji:'\uD83C\uDF2D',mode:'moves',maxTaps:89},
+  {id:14,meal:'hamburger',duration:23,mystery:1,mealCount:12,label:'Level 14',emoji:'\uD83C\uDF54',mode:'timed'},
+  {id:15,meal:'taco',duration:30,mystery:1,mealCount:1,label:'TACO TUESDAY',emoji:'\uD83C\uDF2E',mode:'timed'},
+  {id:16,meal:'sandwich',duration:22,mystery:1,mealCount:12,label:'Level 16',emoji:'\uD83E\uDD6A',mode:'timed'},
+  {id:17,meal:'hotdog',duration:21,mystery:1,mealCount:12,label:'Level 17',emoji:'\uD83C\uDF2D',mode:'timed'},
+  {id:18,meal:'hamburger',duration:26,mystery:1,mealCount:12,label:'Level 18',emoji:'\uD83C\uDF54',mode:'moves',maxTaps:89},
+  {id:19,meal:'hamburger',duration:20,mystery:1,mealCount:12,label:'Level 19',emoji:'\uD83C\uDF54',mode:'timed'},
+  {id:20,meal:'veggie',duration:30,mystery:2,mealCount:1,label:'CHEF VEGGIE',emoji:'\uD83E\uDD57',mode:'timed'},
+  {id:21,meal:'sandwich',duration:20,mystery:2,mealCount:12,label:'Level 21',emoji:'\uD83E\uDD6A',mode:'timed'},
+  {id:22,meal:'hotdog',duration:19,mystery:2,mealCount:12,label:'Level 22',emoji:'\uD83C\uDF2D',mode:'timed'},
+  {id:23,meal:'sandwich',duration:20,mystery:2,mealCount:12,label:'Level 23',emoji:'\uD83E\uDD6A',mode:'moves',maxTaps:90},
+  {id:24,meal:'hamburger',duration:18,mystery:2,mealCount:12,label:'Level 24',emoji:'\uD83C\uDF54',mode:'timed'},
+  {id:25,meal:'pizza',duration:30,mystery:2,mealCount:1,label:'CHEF PIZZA',emoji:'\uD83C\uDF55',mode:'timed'},
+  {id:26,meal:'hamburger',duration:18,mystery:2,mealCount:12,label:'Level 26',emoji:'\uD83C\uDF54',mode:'timed'},
+  {id:27,meal:'hotdog',duration:17,mystery:2,mealCount:12,label:'Level 27',emoji:'\uD83C\uDF2D',mode:'timed'},
+  {id:28,meal:'hamburger',duration:14,mystery:2,mealCount:12,label:'Level 28',emoji:'\uD83C\uDF54',mode:'moves',maxTaps:90},
+  {id:29,meal:'hotdog',duration:16,mystery:2,mealCount:12,label:'Level 29',emoji:'\uD83C\uDF2D',mode:'timed'},
+  {id:30,meal:'candy',duration:30,mystery:3,mealCount:1,label:'CANDY CHEF',emoji:'\uD83C\uDF6C',mode:'timed'},
+  {id:31,meal:'hamburger',duration:16,mystery:3,mealCount:15,label:'Level 31',emoji:'\uD83C\uDF54',mode:'timed'},
+  {id:32,meal:'sandwich',duration:15,mystery:3,mealCount:15,label:'Level 32',emoji:'\uD83E\uDD6A',mode:'timed'},
+  {id:33,meal:'hotdog',duration:12,mystery:3,mealCount:15,label:'Level 33',emoji:'\uD83C\uDF2D',mode:'moves',maxTaps:111},
+  {id:34,meal:'sandwich',duration:15,mystery:3,mealCount:15,label:'Level 34',emoji:'\uD83E\uDD6A',mode:'timed'},
+  {id:35,meal:'sea',duration:30,mystery:3,mealCount:1,label:'CHEF SEA',emoji:'\uD83D\uDC1F',mode:'timed'},
+  {id:36,meal:'hamburger',duration:14,mystery:3,mealCount:15,label:'Level 36',emoji:'\uD83C\uDF54',mode:'timed'},
+  {id:37,meal:'hotdog',duration:14,mystery:3,mealCount:15,label:'Level 37',emoji:'\uD83C\uDF2D',mode:'timed'},
+  {id:38,meal:'hamburger',duration:12,mystery:3,mealCount:15,label:'Level 38',emoji:'\uD83C\uDF54',mode:'moves',maxTaps:111},
+  {id:39,meal:'hamburger',duration:14,mystery:3,mealCount:15,label:'Level 39',emoji:'\uD83C\uDF54',mode:'timed'},
+  {id:40,meal:'breakfast',duration:30,mystery:4,mealCount:1,label:'CHEF BREAKFAST',emoji:'\uD83C\uDF73',mode:'timed'},
+  {id:41,meal:'sandwich',duration:14,mystery:4,mealCount:15,label:'Level 41',emoji:'\uD83E\uDD6A',mode:'timed'},
+  {id:42,meal:'hotdog',duration:13,mystery:4,mealCount:15,label:'Level 42',emoji:'\uD83C\uDF2D',mode:'timed'},
+  {id:43,meal:'hamburger',duration:12,mystery:4,mealCount:15,label:'Level 43',emoji:'\uD83C\uDF54',mode:'moves',maxTaps:112},
+  {id:44,meal:'hamburger',duration:13,mystery:4,mealCount:15,label:'Level 44',emoji:'\uD83C\uDF54',mode:'timed'},
+  {id:45,meal:'meatorama',duration:30,mystery:4,mealCount:1,label:'MEAT-O-RAMA',emoji:'\uD83E\uDD69',mode:'timed'},
+  {id:46,meal:'hotdog',duration:13,mystery:4,mealCount:15,label:'Level 46',emoji:'\uD83C\uDF2D',mode:'timed'},
+  {id:47,meal:'hotdog',duration:13,mystery:4,mealCount:15,label:'Level 47',emoji:'\uD83C\uDF2D',mode:'timed'},
+  {id:48,meal:'sandwich',duration:12,mystery:4,mealCount:15,label:'Level 48',emoji:'\uD83E\uDD6A',mode:'moves',maxTaps:112},
+  {id:49,meal:'hotdog',duration:13,mystery:4,mealCount:15,label:'Level 49',emoji:'\uD83C\uDF2D',mode:'timed'},
+  {id:50,meal:'taco',duration:30,mystery:4,mealCount:1,label:'TACO TUESDAY',emoji:'\uD83C\uDF2E',mode:'timed'},
+  {id:51,meal:'hamburger',duration:13,mystery:4,mealCount:15,label:'Level 51',emoji:'\uD83C\uDF54',mode:'timed'},
+  {id:52,meal:'hamburger',duration:12,mystery:4,mealCount:15,label:'Level 52',emoji:'\uD83C\uDF54',mode:'timed'},
+  {id:53,meal:'hotdog',duration:12,mystery:4,mealCount:15,label:'Level 53',emoji:'\uD83C\uDF2D',mode:'moves',maxTaps:112},
+  {id:54,meal:'hamburger',duration:12,mystery:4,mealCount:15,label:'Level 54',emoji:'\uD83C\uDF54',mode:'timed'},
+  {id:55,meal:'veggie',duration:30,mystery:4,mealCount:1,label:'CHEF VEGGIE',emoji:'\uD83E\uDD57',mode:'timed'},
+  {id:56,meal:'hotdog',duration:12,mystery:4,mealCount:15,label:'Level 56',emoji:'\uD83C\uDF2D',mode:'timed'},
+  {id:57,meal:'sandwich',duration:12,mystery:4,mealCount:15,label:'Level 57',emoji:'\uD83E\uDD6A',mode:'timed'},
+  {id:58,meal:'sandwich',duration:12,mystery:4,mealCount:15,label:'Level 58',emoji:'\uD83E\uDD6A',mode:'moves',maxTaps:112},
+  {id:59,meal:'hotdog',duration:12,mystery:4,mealCount:15,label:'Level 59',emoji:'\uD83C\uDF2D',mode:'timed'},
+  {id:60,meal:'pizza',duration:30,mystery:4,mealCount:1,label:'CHEF PIZZA',emoji:'\uD83C\uDF55',mode:'timed'},
+  {id:61,meal:'sandwich',duration:12,mystery:4,mealCount:20,label:'Level 61',emoji:'\uD83E\uDD6A',mode:'timed'},
+  {id:62,meal:'hamburger',duration:12,mystery:4,mealCount:20,label:'Level 62',emoji:'\uD83C\uDF54',mode:'timed'},
+  {id:63,meal:'sandwich',duration:12,mystery:4,mealCount:20,label:'Level 63',emoji:'\uD83E\uDD6A',mode:'moves',maxTaps:148},
+  {id:64,meal:'hamburger',duration:11,mystery:4,mealCount:20,label:'Level 64',emoji:'\uD83C\uDF54',mode:'timed'},
+  {id:65,meal:'candy',duration:30,mystery:4,mealCount:1,label:'CANDY CHEF',emoji:'\uD83C\uDF6C',mode:'timed'},
+  {id:66,meal:'hamburger',duration:11,mystery:4,mealCount:20,label:'Level 66',emoji:'\uD83C\uDF54',mode:'timed'},
+  {id:67,meal:'hamburger',duration:11,mystery:4,mealCount:20,label:'Level 67',emoji:'\uD83C\uDF54',mode:'timed'},
+  {id:68,meal:'sandwich',duration:12,mystery:4,mealCount:20,label:'Level 68',emoji:'\uD83E\uDD6A',mode:'moves',maxTaps:148},
+  {id:69,meal:'sandwich',duration:11,mystery:4,mealCount:20,label:'Level 69',emoji:'\uD83E\uDD6A',mode:'timed'},
+  {id:70,meal:'sea',duration:30,mystery:4,mealCount:1,label:'CHEF SEA',emoji:'\uD83D\uDC1F',mode:'timed'},
+  {id:71,meal:'sandwich',duration:11,mystery:4,mealCount:20,label:'Level 71',emoji:'\uD83E\uDD6A',mode:'timed'},
+  {id:72,meal:'hotdog',duration:10,mystery:4,mealCount:20,label:'Level 72',emoji:'\uD83C\uDF2D',mode:'timed'},
+  {id:73,meal:'sandwich',duration:12,mystery:4,mealCount:20,label:'Level 73',emoji:'\uD83E\uDD6A',mode:'moves',maxTaps:148},
+  {id:74,meal:'hotdog',duration:10,mystery:4,mealCount:20,label:'Level 74',emoji:'\uD83C\uDF2D',mode:'timed'},
+  {id:75,meal:'breakfast',duration:30,mystery:4,mealCount:1,label:'CHEF BREAKFAST',emoji:'\uD83C\uDF73',mode:'timed'},
+  {id:76,meal:'sandwich',duration:10,mystery:4,mealCount:20,label:'Level 76',emoji:'\uD83E\uDD6A',mode:'timed'},
+  {id:77,meal:'sandwich',duration:10,mystery:4,mealCount:20,label:'Level 77',emoji:'\uD83E\uDD6A',mode:'timed'},
+  {id:78,meal:'hotdog',duration:12,mystery:4,mealCount:20,label:'Level 78',emoji:'\uD83C\uDF2D',mode:'moves',maxTaps:148},
+  {id:79,meal:'hotdog',duration:10,mystery:4,mealCount:20,label:'Level 79',emoji:'\uD83C\uDF2D',mode:'timed'},
+  {id:80,meal:'meatorama',duration:30,mystery:4,mealCount:1,label:'MEAT-O-RAMA',emoji:'\uD83E\uDD69',mode:'timed'},
+  {id:81,meal:'hamburger',duration:10,mystery:4,mealCount:20,label:'Level 81',emoji:'\uD83C\uDF54',mode:'timed'},
+  {id:82,meal:'sandwich',duration:9,mystery:4,mealCount:20,label:'Level 82',emoji:'\uD83E\uDD6A',mode:'timed'},
+  {id:83,meal:'hamburger',duration:12,mystery:4,mealCount:20,label:'Level 83',emoji:'\uD83C\uDF54',mode:'moves',maxTaps:149},
+  {id:84,meal:'hamburger',duration:9,mystery:4,mealCount:20,label:'Level 84',emoji:'\uD83C\uDF54',mode:'timed'},
+  {id:85,meal:'taco',duration:30,mystery:4,mealCount:1,label:'TACO TUESDAY',emoji:'\uD83C\uDF2E',mode:'timed'},
+  {id:86,meal:'hotdog',duration:9,mystery:4,mealCount:20,label:'Level 86',emoji:'\uD83C\uDF2D',mode:'timed'},
+  {id:87,meal:'hamburger',duration:9,mystery:4,mealCount:20,label:'Level 87',emoji:'\uD83C\uDF54',mode:'timed'},
+  {id:88,meal:'hotdog',duration:12,mystery:4,mealCount:20,label:'Level 88',emoji:'\uD83C\uDF2D',mode:'moves',maxTaps:149},
+  {id:89,meal:'sandwich',duration:9,mystery:4,mealCount:20,label:'Level 89',emoji:'\uD83E\uDD6A',mode:'timed'},
+  {id:90,meal:'veggie',duration:30,mystery:4,mealCount:1,label:'CHEF VEGGIE',emoji:'\uD83E\uDD57',mode:'timed'},
+  {id:91,meal:'hotdog',duration:9,mystery:4,mealCount:20,label:'Level 91',emoji:'\uD83C\uDF2D',mode:'timed'},
+  {id:92,meal:'hamburger',duration:9,mystery:4,mealCount:20,label:'Level 92',emoji:'\uD83C\uDF54',mode:'timed'},
+  {id:93,meal:'sandwich',duration:12,mystery:4,mealCount:20,label:'Level 93',emoji:'\uD83E\uDD6A',mode:'moves',maxTaps:149},
+  {id:94,meal:'hamburger',duration:8,mystery:4,mealCount:20,label:'Level 94',emoji:'\uD83C\uDF54',mode:'timed'},
+  {id:95,meal:'pizza',duration:30,mystery:4,mealCount:1,label:'CHEF PIZZA',emoji:'\uD83C\uDF55',mode:'timed'},
+  {id:96,meal:'hotdog',duration:8,mystery:4,mealCount:20,label:'Level 96',emoji:'\uD83C\uDF2D',mode:'timed'},
+  {id:97,meal:'hotdog',duration:8,mystery:4,mealCount:20,label:'Level 97',emoji:'\uD83C\uDF2D',mode:'timed'},
+  {id:98,meal:'hamburger',duration:12,mystery:4,mealCount:20,label:'Level 98',emoji:'\uD83C\uDF54',mode:'moves',maxTaps:149},
+  {id:99,meal:'hamburger',duration:7,mystery:4,mealCount:20,label:'Level 99',emoji:'\uD83C\uDF54',mode:'timed'}
 ];
 
 /* ═══════════════════════════════════════════
@@ -2613,8 +2921,20 @@ function makeRound(rec, nm) {
     for (var j = result.length - 1; j >= 0 && replaced < moldCount; j--) {
       /* Replace a decoy (not a fresh required tile) */
       if (!ns[result[j].ingId]) {
-        result[j] = {key:'mold'+ts+j, type:'ing', ingId:moldTargets[replaced], spoiled:true};
+        result[j] = {key:'mold'+ts+j, type:'ing', ingId:moldTargets[replaced], spoiled:true, burnt:false};
         replaced++;
+      }
+    }
+  }
+  /* Burnt mechanic: Level 10+ — replace 1 decoy slot with a burnt required-ingredient dupe */
+  if (G.level && G.level.id >= 10 && freshIds.length >= 1) {
+    var burntTargets = shuffle(freshIds.slice()).slice(0, 1);
+    var breplaced = 0;
+    for (var k = result.length - 1; k >= 0 && breplaced < 1; k--) {
+      /* Replace a decoy that isn't already moldy */
+      if (!ns[result[k].ingId] && !result[k].spoiled) {
+        result[k] = {key:'burnt'+ts+k, type:'ing', ingId:burntTargets[0], spoiled:false, burnt:true};
+        breplaced++;
       }
     }
   }
@@ -2644,6 +2964,8 @@ var G = {
   score: 0,
   levelScore: 0,
   timeLeft: 15,
+  mode: 'timed',    /* 'timed' | 'moves' */
+  tapsLeft: 0,      /* only used in moves mode */
   phase: 'idle',
   mystRes: null,
   _timer: null,
@@ -2656,6 +2978,7 @@ var G = {
    GAME ACTIONS
 ═══════════════════════════════════════════ */
 function startGame(lid) {
+  window._birdsActive = false; /* stop birds & chirps when gameplay begins */
   var lv = LEVELS.filter(function(l) { return l.id === lid; })[0];
   if (!lv || lv.id > G.maxUnlocked) return;
   /* Auto-refill: consume a banked Heart from Spin Wheel inventory if out of hearts */
@@ -2680,6 +3003,8 @@ function startGame(lid) {
   G.recipe = REC[q[0]]; G.tiles = makeRound(G.recipe, lv.mystery);
   G.seqIdx = 0; G.usedBoxes = []; G.hearts = Economy.hearts; G.shields = Economy.shields; G.extraHearts = Economy.extraHearts || 0;
   G.score = 0; G.levelScore = 0; G.timeLeft = levelTime(lv.id);
+  G.mode = lv.mode || 'timed';
+  G.tapsLeft = (G.mode === 'moves') ? (lv.maxTaps || 9) : 0;
   G.phase = 'playing'; G.mystRes = null; G.mistakes = 0;
   showScreen('gamescreen');
   if (_extraHeartPending) {
@@ -2696,6 +3021,8 @@ function startGame(lid) {
     /* TUT._close() will restart timer when dismissed */
   } else if (G.level.id === 6 && MOLD_TUT.show()) {
     /* MOLD_TUT._close() will restart timer when dismissed */
+  } else if (G.mode === 'moves') {
+    /* No countdown timer for moves-based levels — tapsLeft drives failure */
   } else {
     G._timer = setInterval(tick, 1000);
   }
@@ -2763,6 +3090,27 @@ function tapTile(key) {
     SFX.correct(); vib(30);
     spawnPop('+10', '#7DCEA0');
     animTile(key, 'pop');
+    /* Moves mode: correct taps also spend the budget */
+    if (G.mode === 'moves') {
+      G.tapsLeft--;
+      if (G.tapsLeft <= 0) {
+        if (G.hearts > 0 && !hasUL()) {
+          /* Spend 1 heart for 1 emergency tap */
+          loseHeart();
+          G.hearts = Economy.hearts;
+          G.tapsLeft = 1;
+          spawnPop('\u2764\uFE0F \u21921 tap', '#E74C3C');
+          updateTimerDisplay();
+        } else if (!hasUL()) {
+          /* Out of both taps and hearts */
+          G.phase = 'gameover';
+          renderResult();
+          showNH();
+          return;
+        }
+      }
+      updateTimerDisplay();
+    }
     /* Golden ingredient check — entire level perfect so far */
     var _wasGolden = (
       G.level && G.level.id >= 8 &&
@@ -2780,6 +3128,28 @@ function tapTile(key) {
     spawnPop('-\u2764\uFE0F', '#E74C3C');
     animTile(key, 'shake');
     spawnFlash();
+    /* Moves mode: wrong tap spends budget AND counts as mistake */
+    if (G.mode === 'moves') {
+      G.tapsLeft--;
+      G.mistakes++;
+      if (G.tapsLeft <= 0) {
+        if (G.hearts > 0 && !hasUL()) {
+          /* Spend 1 heart for 1 emergency tap */
+          loseHeart();
+          G.hearts = Economy.hearts;
+          G.tapsLeft = 1;
+          spawnPop('\u2764\uFE0F \u21921 tap', '#E74C3C');
+          updateTimerDisplay();
+          renderGame();
+        } else if (!hasUL()) {
+          /* Out of both taps and hearts — game over */
+          G.phase = 'gameover';
+          renderResult();
+          showNH();
+        }
+      } else { renderGame(); }
+      return;
+    }
     if (G.shields > 0) {
       shieldAbsorbHit();
     } else {
@@ -2830,6 +3200,7 @@ function advanceMeal() {
     G.tiles = makeRound(G.recipe, G.level.mystery);
     G.seqIdx = 0; G.usedBoxes = [];
     G.timeLeft = levelTime(G.level.id); /* fresh timer each meal */
+    /* NOTE: tapsLeft is intentionally NOT reset here — wrong-tap budget is level-wide */
     renderGame();
   }
 }
@@ -2896,6 +3267,15 @@ function animTile(key, cls) {
 function updateTimerDisplay() {
   var el = document.getElementById('timer-val');
   if (!el) return;
+  if (G.mode === 'moves') {
+    var tapPct = G.tapsLeft / (G.level.maxTaps || 9) * 100;
+    var col = tapPct > 50 ? '#27AE60' : tapPct > 25 ? '#F39C12' : '#E74C3C';
+    el.textContent = G.tapsLeft;
+    el.style.color = col;
+    el.style.animation = tapPct <= 22 ? 'blinkTimer .5s infinite' : 'none';
+    el.parentElement.style.borderColor = col;
+    return;
+  }
   var pct = G.timeLeft / levelTime(G.level.id) * 100;
   var col = pct > 50 ? '#27AE60' : pct > 25 ? '#F39C12' : '#E74C3C';
   el.textContent = G.timeLeft + 's';
@@ -2969,9 +3349,12 @@ function renderGame() {
     var bg = done ? 'rgba(39,174,96,.2)' : ing.bg;
     var borderCol = done ? '#27AE60' : ing.ring;
     var isSpoiled = tile.spoiled && !done;
-    var statusAttr = isSpoiled ? ' data-status="spoiled"' : ' data-status="fresh"';
+    var isBurnt   = tile.burnt   && !done;
+    var statusAttr = isSpoiled ? ' data-status="spoiled"' : isBurnt ? ' data-status="burnt"' : ' data-status="fresh"';
+    /* Burnt tiles get a dark orange border tint */
+    if (isBurnt) { borderCol = '#E65100'; }
     /* Golden tile: last ingredient of last meal, zero mistakes, Level 8+ */
-    var isGolden = !done && !isSpoiled &&
+    var isGolden = !done && !isSpoiled && !isBurnt &&
       G.level && G.level.id >= 8 &&
       G.mistakes === 0 &&
       G.mealIdx === G.mealQ.length - 1 &&
@@ -2979,6 +3362,7 @@ function renderGame() {
       tile.ingId === G.recipe.needs[G.seqIdx];
     return '<div class="tile' + (done ? ' done' : (isGolden ? ' golden' : '')) + '" data-key="' + tile.key + '"' + statusAttr + ' data-ing="' + tile.ingId + '" style="background:' + bg + ';border:3px solid ' + borderCol + ';min-height:44px">' +
       (isSpoiled ? '<div class="mold-dot"></div>' : '') +
+      (isBurnt   ? '<div class="burnt-dot"></div>' : '') +
       '<div class="tile-icon">' + (done ? '<span style="font-size:22px;color:#27AE60">\u2713</span>' : foodSVG(tile.ingId, 19)) + '</div>' +
       '<div class="tile-lbl" style="color:' + (done ? '#7DCEA0' : 'rgba(255,255,255,.9)') + '">' + ing.label + '</div>' +
     '</div>';
@@ -3003,12 +3387,24 @@ function renderGame() {
       '<button class="pause-btn">⏸</button>' +
     '</div>' +
 
-    /* ROW 2: ⏱️ TIME — centered, prominent */
+    /* ROW 2: ⏱️ TIME or 👆 TAPS — centered, prominent */
     '<div style="display:flex;align-items:center;justify-content:center;padding:3px 10px;background:rgba(0,0,0,.45);border-bottom:1px solid rgba(255,140,0,.2);flex-shrink:0">' +
-      '<div style="background:rgba(0,0,0,.45);border-radius:9px;padding:3px 18px;text-align:center;border:2px solid ' + tCol + ';min-width:90px">' +
-        '<div style="font-size:8px;color:#aaa;letter-spacing:.5px">TIME</div>' +
-        '<div id="timer-val" style="font-size:20px;font-weight:700;color:' + tCol + ';animation:' + (pct <= 15 ? 'blinkTimer .5s infinite' : 'none') + ';line-height:1">' + G.timeLeft + 's</div>' +
-      '</div>' +
+      (G.mode === 'moves'
+        ? /* MOVES MODE — tap counter */
+          (function() {
+            var tapPct = G.tapsLeft / (G.level.maxTaps || 9) * 100;
+            var tapCol = tapPct > 50 ? '#27AE60' : tapPct > 25 ? '#F39C12' : '#E74C3C';
+            return '<div style="background:rgba(0,0,0,.45);border-radius:9px;padding:3px 18px;text-align:center;border:2px solid ' + tapCol + ';min-width:90px">' +
+              '<div style="font-size:8px;color:#aaa;letter-spacing:.5px">TAPS LEFT</div>' +
+              '<div id="timer-val" style="font-size:20px;font-weight:700;color:' + tapCol + ';animation:' + (tapPct <= 22 ? 'blinkTimer .5s infinite' : 'none') + ';line-height:1">' + G.tapsLeft + '</div>' +
+            '</div>';
+          })()
+        : /* TIMED MODE — countdown */
+          '<div style="background:rgba(0,0,0,.45);border-radius:9px;padding:3px 18px;text-align:center;border:2px solid ' + tCol + ';min-width:90px">' +
+            '<div style="font-size:8px;color:#aaa;letter-spacing:.5px">TIME</div>' +
+            '<div id="timer-val" style="font-size:20px;font-weight:700;color:' + tCol + ';animation:' + (pct <= 15 ? 'blinkTimer .5s infinite' : 'none') + ';line-height:1">' + G.timeLeft + 's</div>' +
+          '</div>'
+      ) +
     '</div>' +
 
     /* ROW 3: ❤️ hearts + extra + shield */
@@ -3102,6 +3498,9 @@ if (_el_gamescreen) _el_gamescreen.addEventListener('click', function(e) {
   /* Moldy tile taps — intercept before normal tile logic */
   var mTile = e.target.closest('[data-status="spoiled"]');
   if (mTile && G.phase === 'playing') { showMoldyPopup(); return; }
+  /* Burnt tile taps — intercept before normal tile logic */
+  var bTile = e.target.closest('[data-status="burnt"]');
+  if (bTile && G.phase === 'playing') { showBurntPopup(); return; }
   /* Normal tile taps */
   var tile = e.target.closest('[data-key]');
   if (tile && tile.dataset.key) tapTile(tile.dataset.key);
@@ -3497,7 +3896,7 @@ function toggleAvPicker() {
   function makeBirdSVG(sz) {
     var s = sz + 'px';
     return '<svg width="' + sz*2.2 + '" height="' + s
-      + '" viewBox="0 0 66 30" xmlns="http://www.w3.org/2000/svg">'
+      + '" viewBox="0 0 66 30" xmlns="http://www.w3.org/2000/svg" style="transform:scaleX(-1)">'
       /* body */
       + '<ellipse cx="33" cy="19" rx="10" ry="5" fill="#111"/>'
       /* head */
@@ -3517,9 +3916,48 @@ function toggleAvPicker() {
       + '</svg>';
   }
 
+  /* ── Bird chirp — three quick rising tweets ─────────────────
+     To swap for a real audio file:
+       var _birdAudio = new Audio('chirp.mp3');
+       function birdChirp() { _birdAudio.currentTime=0; _birdAudio.play().catch(function(){}); }
+  ──────────────────────────────────────────────────────────── */
+  function birdChirp() {
+    if (!soundOn) return;
+    try {
+      var c = getACtx(); if (!c) return;
+      /* Each tweet: quick frequency sweep up then down */
+      var tweets = [
+        { start: 2800, peak: 3600, t: 0.00 },
+        { start: 3000, peak: 3800, t: 0.14 },
+        { start: 2600, peak: 3400, t: 0.26 }
+      ];
+      /* Randomise pitch slightly so no two birds sound identical */
+      var pitch = 0.75 + Math.random() * 0.5;
+      tweets.forEach(function(tw) {
+        var o = c.createOscillator();
+        var g = c.createGain();
+        o.connect(g); g.connect(c.destination);
+        o.type = 'sine';
+        var now = c.currentTime + tw.t;
+        o.frequency.setValueAtTime(tw.start * pitch, now);
+        o.frequency.linearRampToValueAtTime(tw.peak * pitch, now + 0.04);
+        o.frequency.linearRampToValueAtTime(tw.start * pitch, now + 0.09);
+        g.gain.setValueAtTime(0.0, now);
+        g.gain.linearRampToValueAtTime(0.18, now + 0.01);
+        g.gain.exponentialRampToValueAtTime(0.001, now + 0.10);
+        o.start(now);
+        o.stop(now + 0.12);
+      });
+    } catch(e) {}
+  }
+
   function spawnBird() {
     var welcome = document.getElementById('welcome');
     if (!welcome || !welcome.classList.contains('active')) return;
+    if (!window._birdsActive) return; /* stop spawning once game has started */
+
+    /* Play chirp as bird enters */
+    birdChirp();
 
     var bird = document.createElement('div');
     bird.className = 'flying-bird';
@@ -3561,6 +3999,7 @@ function toggleAvPicker() {
   }
 
   /* Start after welcome screen loads */
+  window._birdsActive = true;
   setTimeout(function() {
     scheduleBird();
     /* Fire one immediately so player sees it on first load */
@@ -3593,7 +4032,47 @@ function showMoldyPopup() {
   setTimeout(function(){ if(pop.parentNode) pop.parentNode.removeChild(pop); }, 1350);
 }
 
-/* ── CHEF HENRY MOLD INTRO (Level 6 — every time) ───────────── */
+/* ── BURNT TAP HANDLER ───────────────────────────────────────── */
+function showBurntPopup() {
+  if (typeof SFX !== 'undefined') SFX.wrong();
+  vib([100,50,100]);
+  /* Burnt = lose 1 heart (unlike moldy which just costs time) */
+  spawnPop('-\u2764\uFE0F', '#E74C3C');
+  spawnFlash();
+  if (G.shields > 0) {
+    shieldAbsorbHit();
+  } else {
+    G.mistakes++;
+    loseHeart();
+    G.hearts = Economy.hearts;
+    if (G.hearts <= 0 && !hasUL()) {
+      clearInterval(G._timer);
+      G.phase = 'gameover';
+      renderResult();
+      showNH();
+      return;
+    }
+  }
+  /* Screen shake */
+  var gs = document.getElementById('gamescreen');
+  if (gs) {
+    gs.style.animation = 'screenShake .4s ease';
+    setTimeout(function(){ gs.style.animation = ''; }, 450);
+  }
+  /* Remove any existing popup */
+  var old = document.getElementById('burnt-popup');
+  if (old && old.parentNode) old.parentNode.removeChild(old);
+  /* Popup */
+  var pop = document.createElement('div');
+  pop.id = 'burnt-popup';
+  pop.innerHTML = '<span class="burnt-emoji">\uD83D\uDD25</span>'
+                + '<div class="burnt-text">Burnt!</div>';
+  document.body.appendChild(pop);
+  setTimeout(function(){ if(pop.parentNode) pop.parentNode.removeChild(pop); }, 1350);
+  renderGame();
+}
+
+
 var MOLD_TUT = {
   _step: 0,
   _steps: [

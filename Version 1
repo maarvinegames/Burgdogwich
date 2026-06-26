@@ -635,6 +635,112 @@ flex-shrink:0;text-shadow:0 1px 3px rgba(0,0,0,.5)}
   text-shadow:0 0 24px rgba(92,107,192,.9);
 }
 
+/* ── FROZEN MECHANIC ─────────────────────────────────────────── */
+.tile.frozen-tile{
+  background:linear-gradient(135deg,#0D47A1,#1565C0)!important;
+  border-color:#42A5F5!important;
+  box-shadow:0 0 10px rgba(66,165,245,.7),0 0 22px rgba(66,165,245,.35);
+  animation:frozenPulse 1.8s ease-in-out infinite;
+  cursor:not-allowed;
+  position:relative;
+}
+@keyframes frozenPulse{
+  0%,100%{box-shadow:0 0 8px rgba(66,165,245,.5),0 0 16px rgba(66,165,245,.2)}
+  50%    {box-shadow:0 0 20px rgba(66,165,245,.9),0 0 40px rgba(66,165,245,.55)}
+}
+@keyframes bossGoldPulse{
+  0%,100%{box-shadow:0 0 0 2px #FFD700,0 0 8px rgba(255,215,0,.6),0 4px 14px rgba(0,0,0,.7)}
+  50%    {box-shadow:0 0 0 5px #FFD700,0 0 22px rgba(255,215,0,1),0 0 40px rgba(255,140,0,.7),0 4px 18px rgba(0,0,0,.8)}
+}
+.tile.frozen-tile .tile-icon{filter:blur(1.5px) brightness(.7)}
+.tile.frozen-tile .tile-lbl{color:rgba(179,229,252,.75)!important;font-size:9px;letter-spacing:.4px}
+.frozen-overlay{
+  position:absolute;inset:0;border-radius:10px;
+  background:rgba(13,71,161,.45);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:1px;pointer-events:none;z-index:4
+}
+.frozen-overlay .ice-icon{font-size:18px;line-height:1}
+.frozen-overlay .ice-count{
+  font-size:11px;font-weight:900;color:#E3F2FD;
+  text-shadow:0 0 6px rgba(66,165,245,.9);line-height:1
+}
+.tile.frozen-thawing{
+  background:linear-gradient(135deg,#1976D2,#1E88E5)!important;
+  border-color:#90CAF9!important;
+  animation:thawPulse .4s ease-in-out 3;
+  cursor:pointer;
+}
+@keyframes thawPulse{
+  0%,100%{box-shadow:0 0 8px rgba(144,202,249,.5)}
+  50%    {box-shadow:0 0 22px rgba(144,202,249,1),0 0 40px rgba(144,202,249,.6)}
+}
+#frozen-popup{
+  position:fixed;top:38%;left:50%;transform:translate(-50%,-50%) scale(0);
+  z-index:9999;text-align:center;pointer-events:none;
+  animation:frozenPop .25s cubic-bezier(.34,1.56,.64,1) forwards,
+            frozenFade .35s .9s ease-in forwards
+}
+@keyframes frozenPop{to{transform:translate(-50%,-50%) scale(1)}}
+@keyframes frozenFade{to{opacity:0}}
+.frozen-popup-emoji{font-size:52px;display:block;margin-bottom:4px}
+.frozen-popup-text{
+  font-size:36px;font-weight:900;color:#90CAF9;
+  -webkit-text-stroke:2px #0D47A1;
+  text-shadow:0 0 24px rgba(66,165,245,.9);
+  line-height:1
+}
+
+
+/* ── CHEF HENRY BOSS RACE BAR ───────────────────────────────── */
+#henry-race-bar{
+  display:flex;align-items:center;gap:8px;
+  padding:5px 10px;background:rgba(0,0,0,.6);
+  border-bottom:2px solid #FFD700;flex-shrink:0;
+}
+#henry-avatar{
+  width:36px;height:36px;border-radius:50%;
+  border:2px solid #FFD700;flex-shrink:0;overflow:hidden;
+  background:rgba(0,0,0,.3);
+}
+#henry-avatar img{width:100%;height:100%;object-fit:cover;}
+.henry-seq-wrap{flex:1;}
+.henry-seq-label{
+  font-size:8px;font-weight:900;color:#FFD700;
+  letter-spacing:.8px;margin-bottom:3px;
+}
+.henry-seq-slots{display:flex;gap:3px;}
+.henry-slot{
+  width:24px;height:24px;border-radius:6px;
+  border:2px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.07);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;transition:all .25s;
+}
+.henry-slot.done{
+  background:rgba(220,50,50,.35);
+  border-color:#E74C3C;
+}
+.henry-slot.done::after{content:'✓';font-size:11px;color:#E74C3C;font-weight:900;}
+#henry-status{
+  font-size:9px;font-weight:700;color:#FFD0A0;
+  text-align:right;flex-shrink:0;line-height:1.4;
+}
+@keyframes henryWin{
+  0%{transform:scale(1)}25%{transform:scale(1.3) rotate(-5deg)}
+  50%{transform:scale(1.2) rotate(5deg)}100%{transform:scale(1)}
+}
+#henry-win-overlay{
+  position:absolute;inset:0;background:rgba(180,0,0,.82);
+  z-index:60;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:10px;
+  animation:fadeIn .3s ease;
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+#henry-win-overlay img{width:80px;height:80px;border-radius:50%;border:3px solid #FFD700;animation:henryWin .6s ease;}
+#henry-win-overlay .hw-title{font-size:28px;font-weight:900;color:#FFD700;text-shadow:0 0 20px rgba(255,215,0,.8);}
+#henry-win-overlay .hw-sub{font-size:14px;color:#FFD0A0;font-weight:700;}
+
 .tile.golden{
   border-color:#FFD700!important;
   box-shadow:0 0 14px rgba(255,215,0,.9),0 0 28px rgba(255,215,0,.5),
@@ -1698,6 +1804,7 @@ var SFX = {
   wheelTick:function() { playNote(320+Math.random()*160,.04,'square',.13); },
   spinWin:  function() { [600,800,1000,1300,1600].forEach(function(f,i){ playNote(f,.22,'sine',.32,i*.08); }); },
   moldy:    function() { [300,220,140,90].forEach(function(f,i){ playNote(f,.28,'sawtooth',.38,i*.07); }); },
+  frozen:   function() { [900,700,500,350].forEach(function(f,i){ playNote(f,.18,'sine',.22,i*.06); }); },
   golden:   function() { [523,659,784,1047,1319].forEach(function(f,i){ playNote(f,.28,'sine',.4,i*.09); }); }
 };
 function vib(pattern) { if (vibeOn && navigator.vibrate) navigator.vibrate(pattern); }
@@ -2975,6 +3082,17 @@ function makeRound(rec, nm) {
       }
     }
   }
+  /* Frozen mechanic: hazard === 'frozen' — replace 1 required slot with a frozen copy (timed lock) */
+  if (G.level && G.level.hazard === 'frozen' && freshIds.length >= 1) {
+    var frozenTarget = shuffle(freshIds.slice())[0];
+    /* Try to freeze a non-decoy tile (a real required ingredient) */
+    for (var fi = 0; fi < result.length; fi++) {
+      if (result[fi].ingId === frozenTarget && !result[fi].spoiled && !result[fi].burnt) {
+        result[fi] = {key:'frz'+ts+fi, type:'ing', ingId:frozenTarget, spoiled:false, burnt:false, frozen:true, thawAt: Date.now() + 5000};
+        break;
+      }
+    }
+  }
   for (var i = 0; i < nm; i++) result.push({key:'m'+ts+i, type:'mys', ingId:null, spoiled:false});
   return shuffle(result);
 }
@@ -2983,6 +3101,8 @@ function makeRound(rec, nm) {
 /* ═══════════════════════════════════════════
    GAME STATE
 ═══════════════════════════════════════════ */
+
+var HENRY_IMG = "data:image/png;base64,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";
 var G = {
   maxUnlocked: 1,
   hiScore: 0,
@@ -3060,8 +3180,11 @@ function startGame(lid) {
     /* MOLD_TUT._close() will restart timer when dismissed */
   } else if (G.level.hazard === 'blind' && G.level.id === 4 && BLIND_TUT.show()) {
     /* BLIND_TUT._close() will restart timer when dismissed */
-  } else if (G.level.hazard === 'chef' && G.level.id === 10 && MYST_TUT.show()) {
-    /* MYST_TUT._close() will restart timer when dismissed */
+  } else if (G.level.hazard === 'chef' && BOSS_TUT.show()) {
+    /* BOSS_TUT._close() will restart timer + Henry when dismissed */
+  } else if (G.level.hazard === 'chef') {
+    /* Boss level, tut already seen — start Henry directly */
+    setTimeout(function() { if (G.phase === 'playing') HENRY.start(); }, 800);
   } else if (G.mode === 'moves') {
     /* No countdown timer for moves-based levels — tapsLeft drives failure */
   } else {
@@ -3109,7 +3232,7 @@ function tapTile(key) {
       G.score += added * PTS; G.seqIdx = ns;
       spawnPop('\u2b50 +' + (added * PTS), '#FFD700');
       showMyst('\u2b50 +' + added + ' ingredient' + (added !== 1 ? 's' : '') + '!', '#27AE60');
-      if (G.seqIdx >= G.recipe.needs.length) advanceMeal(); else renderGame();
+      if (G.seqIdx >= G.recipe.needs.length) advanceMeal(); else { renderGame(); HENRY._renderBar(); }
     } else if (roll < 0.65) {
       SFX.bonus();
       var bonus = G.level.id <= 5 ? 5 : 3;
@@ -3212,6 +3335,7 @@ function advanceMeal() {
   G.mealStatus[G.mealIdx] = 'done';
   if (ni >= G.mealQ.length) {
     clearInterval(G._timer);
+    HENRY.stop();
     SFX.level();
     G.levelScore = G.score;
     G.hiScore     = Math.max(G.hiScore, G.score);
@@ -3243,6 +3367,11 @@ function advanceMeal() {
     G.timeLeft = levelTime(G.level.id); /* fresh timer each meal */
     /* NOTE: tapsLeft is intentionally NOT reset here — wrong-tap budget is level-wide */
     renderGame();
+    /* Restart frozen thaw timer for new round */
+    if (G.level && G.level.hazard === 'frozen') {
+      clearInterval(_frozenThawTimer);
+      setTimeout(startFrozenThawTimer, 100);
+    }
   }
 }
 
@@ -3403,7 +3532,8 @@ function renderGame() {
     var borderCol = done ? '#27AE60' : ing.ring;
     var isSpoiled = tile.spoiled && !done;
     var isBurnt   = tile.burnt   && !done;
-    var statusAttr = isSpoiled ? ' data-status="spoiled"' : isBurnt ? ' data-status="burnt"' : ' data-status="fresh"';
+    var isFrozen  = tile.frozen  && !done && tile.thawAt && Date.now() < tile.thawAt;
+    var statusAttr = isSpoiled ? ' data-status="spoiled"' : isBurnt ? ' data-status="burnt"' : isFrozen ? ' data-status="frozen"' : ' data-status="fresh"';
     /* Burnt tiles get a dark orange border tint */
     if (isBurnt) { borderCol = '#E65100'; }
     /* Golden tile: last ingredient of last meal, zero mistakes, Level 8+ */
@@ -3413,9 +3543,10 @@ function renderGame() {
       G.mealIdx === G.mealQ.length - 1 &&
       G.seqIdx === G.recipe.needs.length - 1 &&
       tile.ingId === G.recipe.needs[G.seqIdx];
-    return '<div class="tile' + (done ? ' done' : (isGolden ? ' golden' : '')) + '" data-key="' + tile.key + '"' + statusAttr + ' data-ing="' + tile.ingId + '" style="background:' + bg + ';border:3px solid ' + borderCol + ';min-height:44px">' +
+    return '<div class="tile' + (done ? ' done' : (isFrozen ? ' frozen-tile' : (isGolden ? ' golden' : ''))) + '" data-key="' + tile.key + '"' + statusAttr + ' data-ing="' + tile.ingId + '" style="background:' + bg + ';border:3px solid ' + borderCol + ';min-height:44px">' +
       (isSpoiled ? '<div class="mold-dot"></div>' : '') +
       (isBurnt   ? '<div class="burnt-dot"></div>' : '') +
+      (isFrozen  ? '<div class="frozen-overlay"><span class="ice-icon">❄️</span><span class="ice-count">' + Math.ceil((tile.thawAt - Date.now()) / 1000) + 's</span></div>' : '') +
       '<div class="tile-icon">' + (done ? '<span style="font-size:22px;color:#27AE60">\u2713</span>' : foodSVG(tile.ingId, 19)) + '</div>' +
       '<div class="tile-lbl" style="color:' + (done ? '#7DCEA0' : 'rgba(255,255,255,.9)') + '">' + ing.label + '</div>' +
     '</div>';
@@ -3494,8 +3625,12 @@ function renderGame() {
       '<div id="timer-bar" style="height:100%;width:' + pct + '%;background:' + tCol + ';transition:width 1s linear,background .3s;box-shadow:0 0 6px ' + tCol + '"></div>' +
     '</div>' +
 
+    /* ROW 4.5: Chef Henry race bar (boss levels only) */
+    (G.level&&G.level.hazard==='chef' ? HENRY.renderBarHTML() : '') +
+
     /* ROW 5: Order card (boss banner above if boss level) */
-    (G.level&&G.level.id%5===0?'<div class="boss-banner">\u2694\uFE0F BOSS LEVEL \u2694\uFE0F</div>':'') +
+    (G.level&&G.level.hazard==='chef'?'<div class="boss-banner">⚔️ BOSS BATTLE ⚔️</div>':
+     G.level&&G.level.id%5===0?'<div class="boss-banner">⚔️ BOSS LEVEL ⚔️</div>':'') +
     '<div style="margin:5px 8px 0;background:rgba(0,0,0,.55);border:2px solid ' + rec.color + '88;border-radius:12px;padding:7px 10px;flex-shrink:0">' +
       '<div style="display:flex;align-items:center;gap:9px">' +
         '<span style="font-size:22px">' + rec.emoji + '</span>' +
@@ -3537,6 +3672,8 @@ if (_el_gamescreen) _el_gamescreen.addEventListener('click', function(e) {
   /* Back button — works even after innerHTML rebuilds */
   if (e.target.closest('#back-to-ls')) {
     clearInterval(G._timer); clearTimeout(G._conTimer);
+    clearInterval(_frozenThawTimer);
+    HENRY.stop();
     var tut = document.getElementById('tut-overlay');
     if (tut) tut.remove();
     var mtut = document.getElementById('mold-tut-overlay');
@@ -3554,6 +3691,9 @@ if (_el_gamescreen) _el_gamescreen.addEventListener('click', function(e) {
   /* Burnt tile taps — intercept before normal tile logic */
   var bTile = e.target.closest('[data-status="burnt"]');
   if (bTile && G.phase === 'playing') { showBurntPopup(); return; }
+  /* Frozen tile taps — tile is still locked, warn and do nothing */
+  var fTile = e.target.closest('[data-status="frozen"]');
+  if (fTile && G.phase === 'playing') { showFrozenPopup(); return; }
   /* Blind tile — single tap, player guesses by memory.
      No reveal step. Falls straight through to tapTile which
      handles correct / wrong logic exactly like a normal tile. */
@@ -4128,8 +4268,225 @@ function showBurntPopup() {
   renderGame();
 }
 
+
+/* ══════════════════════════════════════════
+   CHEF HENRY BOSS MECHANIC
+══════════════════════════════════════════ */
+var HENRY = {
+  seqIdx: 0,
+  timer: null,
+  active: false,
+
+  /* Speed in ms per ingredient — gets faster each boss level */
+  speed: function() {
+    var id = G.level ? G.level.id : 10;
+    /* Boss levels: 10,20,30...90,99 — map to index 0-9 */
+    var bossIndex = Math.floor((id - 10) / 10);
+    if (id === 99) bossIndex = 9;
+    /* Start at 3500ms, drop 250ms per boss, floor at 1200ms */
+    return Math.max(1200, 3500 - bossIndex * 250);
+  },
+
+  start: function() {
+    HENRY.seqIdx = 0;
+    HENRY.active = true;
+    HENRY._tick();
+  },
+
+  _tick: function() {
+    HENRY.timer = setTimeout(function() {
+      if (!HENRY.active || G.phase !== 'playing') return;
+      HENRY.seqIdx++;
+      HENRY._renderBar();
+      /* Henry finished — player loses a heart */
+      if (HENRY.seqIdx >= G.recipe.needs.length) {
+        HENRY.active = false;
+        HENRY._henryWins();
+        return;
+      }
+      HENRY._tick();
+    }, HENRY.speed());
+  },
+
+  _henryWins: function() {
+    clearInterval(G._timer);
+    G.phase = 'henrywon';
+    if (typeof SFX !== 'undefined') SFX.wrong();
+    /* Show Henry win overlay */
+    var gs = document.getElementById('gamescreen');
+    if (!gs) return;
+    var ov = document.createElement('div');
+    ov.id = 'henry-win-overlay';
+    ov.innerHTML =
+      '<img src="' + TUT._img + '" alt="Chef Henry" style="width:110px;height:110px;border-radius:50%;border:3px solid #FFD700;object-fit:cover;"/>' +
+      '<div class="hw-title">Chef Henry Wins! 😤</div>' +
+      '<div class="hw-sub">She beat you this time...</div>';
+    gs.appendChild(ov);
+    /* Lose a heart after short delay */
+    setTimeout(function() {
+      if (gs.contains(ov)) gs.removeChild(ov);
+      G.mistakes++;
+      loseHeart();
+      G.hearts = Economy.hearts;
+      if (G.hearts <= 0 && !hasUL()) {
+        G.phase = 'gameover';
+        renderResult();
+        showNH();
+      } else {
+        /* Retry — reset Henry and the round */
+        HENRY.stop();
+        G.tiles = makeRound(G.recipe, G.level.mystery);
+        G.seqIdx = 0; G.usedBoxes = [];
+        G.timeLeft = levelTime(G.level.id);
+        G.phase = 'playing';
+        renderGame();
+        G._timer = setInterval(tick, 1000);
+        HENRY.start();
+      }
+    }, 2200);
+  },
+
+  _renderBar: function() {
+    var bar = document.getElementById('henry-race-bar');
+    if (!bar || !G.recipe) return;
+    var slots = G.recipe.needs.map(function(id, i) {
+      var done = i < HENRY.seqIdx;
+      return '<div class="henry-slot' + (done ? ' done' : '') + '">' +
+        (done ? '' : foodSVG(id, 14)) +
+        '</div>';
+    }).join('');
+    var statusEl = bar.querySelector('#henry-status');
+    if (statusEl) statusEl.innerHTML = 'Henry<br>' + HENRY.seqIdx + '/' + G.recipe.needs.length;
+    var slotsEl = bar.querySelector('.henry-seq-slots');
+    if (slotsEl) slotsEl.innerHTML = slots;
+  },
+
+  stop: function() {
+    HENRY.active = false;
+    clearTimeout(HENRY.timer);
+  },
+
+  renderBarHTML: function() {
+    if (!G.level || G.level.hazard !== 'chef') return '';
+    var rec = G.recipe;
+    if (!rec) return '';
+    var slots = rec.needs.map(function(id, i) {
+      return '<div class="henry-slot">' + foodSVG(id, 14) + '</div>';
+    }).join('');
+    return '<div id="henry-race-bar">' +
+      '<div id="henry-avatar"><img src="' + HENRY_IMG + '" alt="Henry"/></div>' +
+      '<div class="henry-seq-wrap">' +
+        '<div class="henry-seq-label">⚔️ CHEF HENRY</div>' +
+        '<div class="henry-seq-slots">' + slots + '</div>' +
+      '</div>' +
+      '<div id="henry-status">Henry<br>0/' + rec.needs.length + '</div>' +
+    '</div>';
+  }
+};
+
+/* ── FROZEN TAP HANDLER & THAW TIMER ────────────────────────── */
+var _frozenThawTimer = null;
+
+function startFrozenThawTimer() {
+  clearInterval(_frozenThawTimer);
+  _frozenThawTimer = setInterval(function() {
+    if (G.phase !== 'playing') return;
+    var now = Date.now();
+    var anyFrozen = false;
+    var anyThawed = false;
+    G.tiles.forEach(function(tile) {
+      if (tile.frozen && tile.thawAt) {
+        if (now >= tile.thawAt) {
+          tile.frozen = false; /* thawed — now tappable */
+          anyThawed = true;
+        } else {
+          anyFrozen = true;
+        }
+      }
+    });
+    if (anyThawed || anyFrozen) {
+      renderGame(); /* refresh countdown display */
+    }
+    if (!anyFrozen) {
+      clearInterval(_frozenThawTimer);
+    }
+  }, 500);
+}
+
+function showFrozenPopup() {
+  if (typeof SFX !== 'undefined') SFX.frozen();
+  /* Brief screen shake — frozen tile is a blocker, not a penalty */
+  var gs = document.getElementById('gamescreen');
+  if (gs) {
+    gs.style.animation = 'screenShake .3s ease';
+    setTimeout(function(){ gs.style.animation = ''; }, 350);
+  }
+  /* Remove any existing popup */
+  var old = document.getElementById('frozen-popup');
+  if (old && old.parentNode) old.parentNode.removeChild(old);
+  /* Popup */
+  var pop = document.createElement('div');
+  pop.id = 'frozen-popup';
+  pop.innerHTML = '<span class="frozen-popup-emoji">❄️</span>'
+                + '<div class="frozen-popup-text">FROZEN!</div>';
+  document.body.appendChild(pop);
+  setTimeout(function(){ if(pop.parentNode) pop.parentNode.removeChild(pop); }, 1200);
+}
+
+/* Hook into startGame to kick off the thaw timer on frozen levels */
+var _origStartGame = startGame;
+startGame = function(lid) {
+  clearInterval(_frozenThawTimer);
+  _origStartGame(lid);
+  /* Start thaw countdown if this is a frozen hazard level */
+  if (G.level && G.level.hazard === 'frozen') {
+    setTimeout(startFrozenThawTimer, 100);
+  }
+};
+
 /* ── BLIND ORDER TUTORIAL ────────────────────────────────────── */
 /* ── MYSTERY BOX TUTORIAL (Level 10) ────────────────────────── */
+
+/* ── BOSS BATTLE INTRO (replaces MYST_TUT on all chef levels) ─ */
+var BOSS_TUT = {
+  _shown: {},
+  show: function() {
+    var id = G.level ? G.level.id : 0;
+    if (this._shown[id]) return false;
+    this._shown[id] = true;
+    try { this._render(); } catch(e) { console.warn("BOSS_TUT:", e); return false; }
+    return true;
+  },
+  _render: function() {
+    var el = document.getElementById("boss-tut-overlay");
+    if (!el) { el = document.createElement("div"); el.id = "boss-tut-overlay"; document.body.appendChild(el); }
+    var bossName = G.level ? G.level.label : "BOSS BATTLE";
+    el.style.cssText = "position:fixed;inset:0;z-index:980;background:rgba(0,0,0,.88);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:28px;animation:tutFadeIn .35s ease";
+    el.innerHTML =
+      '<div style="text-align:center;margin-bottom:-10px;z-index:2">' +
+      '<div style="font-size:11px;font-weight:900;color:#FFD700;letter-spacing:2px;text-shadow:0 0 12px rgba(255,215,0,.8)">&#9876; BOSS BATTLE &#9876;</div>' +
+      '<div style="font-size:13px;font-weight:700;color:#FFD0A0">' + bossName + '</div></div>' +
+      '<div class="tut-henry-wrap" style="margin-bottom:0">' +
+      '<img src="' + TUT._img + '" class="tut-henry-img" alt="Chef Henry" style="border:3px solid #FFD700;box-shadow:0 0 24px rgba(255,215,0,.7)"/>' +
+      '</div>' +
+      '<div class="tut-card" style="border:2px solid #FFD700;background:linear-gradient(160deg,rgba(30,10,0,.97),rgba(60,20,0,.97))">' +
+      '<div class="tut-header"><span class="tut-henry-name" style="color:#FFD700">&#128104; Chef Henry says...</span></div>' +
+      '<div class="tut-msg" style="font-size:15px;line-height:1.6">' +
+      "You want to move on?<br>You'll have to beat <b style='color:#FFD700'>ME</b> first!<br><br>I'll be building the same order &mdash; finish before I do or lose a heart.<br>Good luck... you'll need it. &#127859;" +
+      '</div>' +
+      '<div class="tut-footer" style="justify-content:flex-end">' +
+      "<button class='tut-next-btn' style='background:linear-gradient(135deg,#FFD700,#FF8C00);color:#3A1500;font-size:15px' onclick='BOSS_TUT._close()'>Let's Cook! &#128293;</button>" +
+      '</div></div>';
+  },
+  _close: function() {
+    var el = document.getElementById("boss-tut-overlay");
+    if (el) el.remove();
+    clearInterval(G._timer);
+    if (G.mode !== "moves") G._timer = setInterval(tick, 1000);
+    HENRY.stop();
+    setTimeout(function() { if (G.phase === "playing") HENRY.start(); }, 400);
+  }
+};
 var MYST_TUT = {
   _step: 0,
   _steps: [
@@ -4438,22 +4795,40 @@ var MAP_POS = [
 
 
 /* ── MAP HELPER FUNCTIONS ────────────────────────────────────── */
+function hazardCircleStyle(id, state) {
+  if (state === 'locked') return {bg:'linear-gradient(145deg,#888,#555)',border:'2px solid rgba(255,255,255,.2)',color:'#fff',anim:''};
+  var lv = null;
+  for (var x = 0; x < LEVELS.length; x++) { if (LEVELS[x].id === id) { lv = LEVELS[x]; break; } }
+  var hazard = lv ? lv.hazard : 'regular';
+  if (hazard === 'chef') {
+    return {bg:'linear-gradient(145deg,#FFE033,#FFA500)',border:'3px solid #FFD700',color:'#7A4800',anim:'animation:bossGoldPulse 1s ease-in-out infinite;'};
+  }
+  if (state === 'milestone') return {bg:'linear-gradient(145deg,#5BA3F5,#1A5CB5)',border:'3px solid rgba(135,206,250,.9)',color:'#fff',anim:''};
+  var map = {
+    regular:{bg:'linear-gradient(145deg,#8B5E3C,#5C3317)',border:'3px solid #C49A6C',color:'#fff',anim:''},
+    moldy:  {bg:'linear-gradient(145deg,#2E7D32,#1B5E20)',border:'3px solid #66BB6A',color:'#fff',anim:''},
+    blind:  {bg:'linear-gradient(145deg,#C62828,#8B0000)',border:'3px solid #EF9A9A',color:'#fff',anim:''},
+    frozen: {bg:'linear-gradient(145deg,#4FC3F7,#0288D1)',border:'3px solid #B3E5FC',color:'#fff',anim:''},
+    burnt:  {bg:'linear-gradient(145deg,#4E2C0E,#2E1503)',border:'3px solid #A0522D',color:'#fff',anim:''}
+  };
+  var s = map[hazard] || map.regular;
+  if (state === 'current') s = {bg:s.bg,border:'3px solid #fff',color:'#fff',anim:'animation:mapPulse 1.2s ease-in-out infinite;'};
+  return s;
+}
 function buildMapNode(id,pos,stars,state){
-  var BG={completed:'linear-gradient(145deg,#FF7B35,#D94F00)',current:'linear-gradient(145deg,#FFD700,#FF8C00)',milestone:'linear-gradient(145deg,#5BA3F5,#1A5CB5)',locked:'linear-gradient(145deg,#888,#555)'};
-  var bd={completed:'3px solid rgba(255,255,255,.7)',current:'3px solid #fff',milestone:'3px solid rgba(135,206,250,.9)',locked:'2px solid rgba(255,255,255,.2)'};
-  var anim=state==='current'?'animation:mapPulse 1.2s ease-in-out infinite;':'';
+  var style = hazardCircleStyle(id, state);
   var fs=id>9?'13px':'16px';
   var lPct=(pos.x/390*100).toFixed(2)+'%';
   var tPct=(pos.y/465*100).toFixed(2)+'%';
   var sh='';for(var i=0;i<3;i++)sh+=i<stars?'\u2605':'\u2606';
   var sc=stars>0?'#FFD700':'rgba(255,255,255,.3)';
   var lockBadge=state==='locked'?'<div style="position:absolute;top:-4px;right:-4px;font-size:10px;line-height:1">\uD83D\uDD12</div>':'';
+  var boxShadow=style.anim?'':'box-shadow:0 0 0 3px rgba(255,255,255,.55),0 4px 14px rgba(0,0,0,.7);';
   return '<div data-level="'+id+'" style="position:absolute;left:'+lPct+';top:'+tPct+
     ';transform:translate(-50%,-50%);text-align:center;cursor:pointer">'+
-    '<div style="position:relative;width:44px;height:44px;border-radius:50%;background:'+BG[state]+
-    ';border:'+bd[state]+';display:flex;align-items:center;justify-content:center;'+
-    'font-size:'+fs+';font-weight:900;color:#fff;'+
-    'box-shadow:0 0 0 3px rgba(255,255,255,.55),0 4px 14px rgba(0,0,0,.7);'+anim+'">'+
+    '<div style="position:relative;width:44px;height:44px;border-radius:50%;background:'+style.bg+
+    ';border:'+style.border+';display:flex;align-items:center;justify-content:center;'+
+    'font-size:'+fs+';font-weight:900;color:'+style.color+';'+boxShadow+style.anim+'">'+
     id+lockBadge+'</div>'+
     '<div style="font-size:9px;color:'+sc+';margin-top:2px;letter-spacing:-1px;text-shadow:0 1px 3px rgba(0,0,0,.9)">'+sh+'</div></div>';
 }

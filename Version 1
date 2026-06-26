@@ -4283,8 +4283,8 @@ var HENRY = {
     /* Boss levels: 10,20,30...90,99 — map to index 0-9 */
     var bossIndex = Math.floor((id - 10) / 10);
     if (id === 99) bossIndex = 9;
-    /* Start at 3500ms, drop 250ms per boss, floor at 1200ms */
-    return Math.max(1200, 3500 - bossIndex * 250);
+    /* Start at 1750ms, drop 125ms per boss, floor at 600ms (50% faster than original) */
+    return Math.max(600, 1750 - bossIndex * 125);
   },
 
   start: function() {

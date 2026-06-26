@@ -594,6 +594,46 @@ flex-shrink:0;text-shadow:0 1px 3px rgba(0,0,0,.5)}
 }
 .burnt-emoji{font-size:52px;display:block;margin-bottom:4px}
 
+/* ── BLIND ORDER MECHANIC ────────────────────────────────────── */
+.tile.blind-tile{
+  background:linear-gradient(135deg,#1A237E,#283593)!important;
+  border-color:#5C6BC0!important;
+  box-shadow:0 0 10px rgba(92,107,192,.6),0 0 20px rgba(92,107,192,.3);
+  animation:blindPulse 1.6s ease-in-out infinite;
+  cursor:pointer;
+}
+@keyframes blindPulse{
+  0%,100%{box-shadow:0 0 8px rgba(92,107,192,.5),0 0 16px rgba(92,107,192,.2)}
+  50%    {box-shadow:0 0 18px rgba(92,107,192,.9),0 0 36px rgba(92,107,192,.5)}
+}
+.tile.blind-tile .tile-icon{font-size:22px}
+.tile.blind-tile .tile-lbl{color:rgba(197,202,233,.85)!important;font-size:9px;letter-spacing:.5px}
+/* Revealed state — briefly flashes before second tap collects */
+.tile.blind-revealed{
+  background:linear-gradient(135deg,#4A148C,#6A1B9A)!important;
+  border-color:#CE93D8!important;
+  box-shadow:0 0 16px rgba(206,147,216,.8);
+  animation:revealFlash .35s ease-out forwards;
+}
+@keyframes revealFlash{
+  0%  {transform:scale(1.12);opacity:.7}
+  60% {transform:scale(1.05);opacity:1}
+  100%{transform:scale(1);opacity:1}
+}
+#blind-popup{
+  position:fixed;top:38%;left:50%;transform:translate(-50%,-50%) scale(0);
+  z-index:9999;text-align:center;pointer-events:none;
+  animation:blindPop .25s cubic-bezier(.34,1.56,.64,1) forwards,
+            blindFade .35s 1.1s ease-in forwards
+}
+@keyframes blindPop{to{transform:translate(-50%,-50%) scale(1)}}
+@keyframes blindFade{to{opacity:0}}
+.blind-emoji{font-size:52px;display:block;margin-bottom:4px}
+.blind-text{
+  font-size:38px;font-weight:900;color:#9FA8DA;
+  -webkit-text-stroke:2px #1A237E;
+  text-shadow:0 0 24px rgba(92,107,192,.9);
+}
 
 .tile.golden{
   border-color:#FFD700!important;
@@ -2734,105 +2774,105 @@ var REC = {
 };
 
 var LEVELS = [
-  {id:1,meal:'hamburger',duration:45,mystery:0,mealCount:1,label:'Level 1',emoji:'\uD83C\uDF54',mode:'timed'},
-  {id:2,meal:'hotdog',duration:40,mystery:0,mealCount:2,label:'Level 2',emoji:'\uD83C\uDF2D',mode:'timed'},
-  {id:3,meal:'sandwich',duration:43,mystery:0,mealCount:3,label:'Level 3',emoji:'\uD83E\uDD6A',mode:'moves',maxTaps:25},
-  {id:4,meal:'sandwich',duration:35,mystery:0,mealCount:4,label:'Level 4',emoji:'\uD83E\uDD6A',mode:'timed'},
-  {id:5,meal:'breakfast',duration:40,mystery:0,mealCount:1,label:'CHEF BREAKFAST',emoji:'\uD83C\uDF73',mode:'timed'},
-  {id:6,meal:'hotdog',duration:30,mystery:0,mealCount:6,label:'Level 6',emoji:'\uD83C\uDF2D',mode:'timed'},
-  {id:7,meal:'hotdog',duration:28,mystery:0,mealCount:7,label:'Level 7',emoji:'\uD83C\uDF2D',mode:'timed'},
-  {id:8,meal:'sandwich',duration:37,mystery:0,mealCount:8,label:'Level 8',emoji:'\uD83E\uDD6A',mode:'moves',maxTaps:62},
-  {id:9,meal:'hamburger',duration:25,mystery:0,mealCount:9,label:'Level 9',emoji:'\uD83C\uDF54',mode:'timed'},
-  {id:10,meal:'meatorama',duration:30,mystery:1,mealCount:1,label:'MEAT-O-RAMA',emoji:'\uD83E\uDD69',mode:'timed'},
-  {id:11,meal:'sandwich',duration:25,mystery:1,mealCount:12,label:'Level 11',emoji:'\uD83E\uDD6A',mode:'timed'},
-  {id:12,meal:'hotdog',duration:24,mystery:1,mealCount:12,label:'Level 12',emoji:'\uD83C\uDF2D',mode:'timed'},
-  {id:13,meal:'hotdog',duration:31,mystery:1,mealCount:12,label:'Level 13',emoji:'\uD83C\uDF2D',mode:'moves',maxTaps:89},
-  {id:14,meal:'hamburger',duration:23,mystery:1,mealCount:12,label:'Level 14',emoji:'\uD83C\uDF54',mode:'timed'},
-  {id:15,meal:'taco',duration:30,mystery:1,mealCount:1,label:'TACO TUESDAY',emoji:'\uD83C\uDF2E',mode:'timed'},
-  {id:16,meal:'sandwich',duration:22,mystery:1,mealCount:12,label:'Level 16',emoji:'\uD83E\uDD6A',mode:'timed'},
-  {id:17,meal:'hotdog',duration:21,mystery:1,mealCount:12,label:'Level 17',emoji:'\uD83C\uDF2D',mode:'timed'},
-  {id:18,meal:'hamburger',duration:26,mystery:1,mealCount:12,label:'Level 18',emoji:'\uD83C\uDF54',mode:'moves',maxTaps:89},
-  {id:19,meal:'hamburger',duration:20,mystery:1,mealCount:12,label:'Level 19',emoji:'\uD83C\uDF54',mode:'timed'},
-  {id:20,meal:'veggie',duration:30,mystery:2,mealCount:1,label:'CHEF VEGGIE',emoji:'\uD83E\uDD57',mode:'timed'},
-  {id:21,meal:'sandwich',duration:20,mystery:2,mealCount:12,label:'Level 21',emoji:'\uD83E\uDD6A',mode:'timed'},
-  {id:22,meal:'hotdog',duration:19,mystery:2,mealCount:12,label:'Level 22',emoji:'\uD83C\uDF2D',mode:'timed'},
-  {id:23,meal:'sandwich',duration:20,mystery:2,mealCount:12,label:'Level 23',emoji:'\uD83E\uDD6A',mode:'moves',maxTaps:90},
-  {id:24,meal:'hamburger',duration:18,mystery:2,mealCount:12,label:'Level 24',emoji:'\uD83C\uDF54',mode:'timed'},
-  {id:25,meal:'pizza',duration:30,mystery:2,mealCount:1,label:'CHEF PIZZA',emoji:'\uD83C\uDF55',mode:'timed'},
-  {id:26,meal:'hamburger',duration:18,mystery:2,mealCount:12,label:'Level 26',emoji:'\uD83C\uDF54',mode:'timed'},
-  {id:27,meal:'hotdog',duration:17,mystery:2,mealCount:12,label:'Level 27',emoji:'\uD83C\uDF2D',mode:'timed'},
-  {id:28,meal:'hamburger',duration:14,mystery:2,mealCount:12,label:'Level 28',emoji:'\uD83C\uDF54',mode:'moves',maxTaps:90},
-  {id:29,meal:'hotdog',duration:16,mystery:2,mealCount:12,label:'Level 29',emoji:'\uD83C\uDF2D',mode:'timed'},
-  {id:30,meal:'candy',duration:30,mystery:3,mealCount:1,label:'CANDY CHEF',emoji:'\uD83C\uDF6C',mode:'timed'},
-  {id:31,meal:'hamburger',duration:16,mystery:3,mealCount:15,label:'Level 31',emoji:'\uD83C\uDF54',mode:'timed'},
-  {id:32,meal:'sandwich',duration:15,mystery:3,mealCount:15,label:'Level 32',emoji:'\uD83E\uDD6A',mode:'timed'},
-  {id:33,meal:'hotdog',duration:12,mystery:3,mealCount:15,label:'Level 33',emoji:'\uD83C\uDF2D',mode:'moves',maxTaps:111},
-  {id:34,meal:'sandwich',duration:15,mystery:3,mealCount:15,label:'Level 34',emoji:'\uD83E\uDD6A',mode:'timed'},
-  {id:35,meal:'sea',duration:30,mystery:3,mealCount:1,label:'CHEF SEA',emoji:'\uD83D\uDC1F',mode:'timed'},
-  {id:36,meal:'hamburger',duration:14,mystery:3,mealCount:15,label:'Level 36',emoji:'\uD83C\uDF54',mode:'timed'},
-  {id:37,meal:'hotdog',duration:14,mystery:3,mealCount:15,label:'Level 37',emoji:'\uD83C\uDF2D',mode:'timed'},
-  {id:38,meal:'hamburger',duration:12,mystery:3,mealCount:15,label:'Level 38',emoji:'\uD83C\uDF54',mode:'moves',maxTaps:111},
-  {id:39,meal:'hamburger',duration:14,mystery:3,mealCount:15,label:'Level 39',emoji:'\uD83C\uDF54',mode:'timed'},
-  {id:40,meal:'breakfast',duration:30,mystery:4,mealCount:1,label:'CHEF BREAKFAST',emoji:'\uD83C\uDF73',mode:'timed'},
-  {id:41,meal:'sandwich',duration:14,mystery:4,mealCount:15,label:'Level 41',emoji:'\uD83E\uDD6A',mode:'timed'},
-  {id:42,meal:'hotdog',duration:13,mystery:4,mealCount:15,label:'Level 42',emoji:'\uD83C\uDF2D',mode:'timed'},
-  {id:43,meal:'hamburger',duration:12,mystery:4,mealCount:15,label:'Level 43',emoji:'\uD83C\uDF54',mode:'moves',maxTaps:112},
-  {id:44,meal:'hamburger',duration:13,mystery:4,mealCount:15,label:'Level 44',emoji:'\uD83C\uDF54',mode:'timed'},
-  {id:45,meal:'meatorama',duration:30,mystery:4,mealCount:1,label:'MEAT-O-RAMA',emoji:'\uD83E\uDD69',mode:'timed'},
-  {id:46,meal:'hotdog',duration:13,mystery:4,mealCount:15,label:'Level 46',emoji:'\uD83C\uDF2D',mode:'timed'},
-  {id:47,meal:'hotdog',duration:13,mystery:4,mealCount:15,label:'Level 47',emoji:'\uD83C\uDF2D',mode:'timed'},
-  {id:48,meal:'sandwich',duration:12,mystery:4,mealCount:15,label:'Level 48',emoji:'\uD83E\uDD6A',mode:'moves',maxTaps:112},
-  {id:49,meal:'hotdog',duration:13,mystery:4,mealCount:15,label:'Level 49',emoji:'\uD83C\uDF2D',mode:'timed'},
-  {id:50,meal:'taco',duration:30,mystery:4,mealCount:1,label:'TACO TUESDAY',emoji:'\uD83C\uDF2E',mode:'timed'},
-  {id:51,meal:'hamburger',duration:13,mystery:4,mealCount:15,label:'Level 51',emoji:'\uD83C\uDF54',mode:'timed'},
-  {id:52,meal:'hamburger',duration:12,mystery:4,mealCount:15,label:'Level 52',emoji:'\uD83C\uDF54',mode:'timed'},
-  {id:53,meal:'hotdog',duration:12,mystery:4,mealCount:15,label:'Level 53',emoji:'\uD83C\uDF2D',mode:'moves',maxTaps:112},
-  {id:54,meal:'hamburger',duration:12,mystery:4,mealCount:15,label:'Level 54',emoji:'\uD83C\uDF54',mode:'timed'},
-  {id:55,meal:'veggie',duration:30,mystery:4,mealCount:1,label:'CHEF VEGGIE',emoji:'\uD83E\uDD57',mode:'timed'},
-  {id:56,meal:'hotdog',duration:12,mystery:4,mealCount:15,label:'Level 56',emoji:'\uD83C\uDF2D',mode:'timed'},
-  {id:57,meal:'sandwich',duration:12,mystery:4,mealCount:15,label:'Level 57',emoji:'\uD83E\uDD6A',mode:'timed'},
-  {id:58,meal:'sandwich',duration:12,mystery:4,mealCount:15,label:'Level 58',emoji:'\uD83E\uDD6A',mode:'moves',maxTaps:112},
-  {id:59,meal:'hotdog',duration:12,mystery:4,mealCount:15,label:'Level 59',emoji:'\uD83C\uDF2D',mode:'timed'},
-  {id:60,meal:'pizza',duration:30,mystery:4,mealCount:1,label:'CHEF PIZZA',emoji:'\uD83C\uDF55',mode:'timed'},
-  {id:61,meal:'sandwich',duration:12,mystery:4,mealCount:20,label:'Level 61',emoji:'\uD83E\uDD6A',mode:'timed'},
-  {id:62,meal:'hamburger',duration:12,mystery:4,mealCount:20,label:'Level 62',emoji:'\uD83C\uDF54',mode:'timed'},
-  {id:63,meal:'sandwich',duration:12,mystery:4,mealCount:20,label:'Level 63',emoji:'\uD83E\uDD6A',mode:'moves',maxTaps:148},
-  {id:64,meal:'hamburger',duration:11,mystery:4,mealCount:20,label:'Level 64',emoji:'\uD83C\uDF54',mode:'timed'},
-  {id:65,meal:'candy',duration:30,mystery:4,mealCount:1,label:'CANDY CHEF',emoji:'\uD83C\uDF6C',mode:'timed'},
-  {id:66,meal:'hamburger',duration:11,mystery:4,mealCount:20,label:'Level 66',emoji:'\uD83C\uDF54',mode:'timed'},
-  {id:67,meal:'hamburger',duration:11,mystery:4,mealCount:20,label:'Level 67',emoji:'\uD83C\uDF54',mode:'timed'},
-  {id:68,meal:'sandwich',duration:12,mystery:4,mealCount:20,label:'Level 68',emoji:'\uD83E\uDD6A',mode:'moves',maxTaps:148},
-  {id:69,meal:'sandwich',duration:11,mystery:4,mealCount:20,label:'Level 69',emoji:'\uD83E\uDD6A',mode:'timed'},
-  {id:70,meal:'sea',duration:30,mystery:4,mealCount:1,label:'CHEF SEA',emoji:'\uD83D\uDC1F',mode:'timed'},
-  {id:71,meal:'sandwich',duration:11,mystery:4,mealCount:20,label:'Level 71',emoji:'\uD83E\uDD6A',mode:'timed'},
-  {id:72,meal:'hotdog',duration:10,mystery:4,mealCount:20,label:'Level 72',emoji:'\uD83C\uDF2D',mode:'timed'},
-  {id:73,meal:'sandwich',duration:12,mystery:4,mealCount:20,label:'Level 73',emoji:'\uD83E\uDD6A',mode:'moves',maxTaps:148},
-  {id:74,meal:'hotdog',duration:10,mystery:4,mealCount:20,label:'Level 74',emoji:'\uD83C\uDF2D',mode:'timed'},
-  {id:75,meal:'breakfast',duration:30,mystery:4,mealCount:1,label:'CHEF BREAKFAST',emoji:'\uD83C\uDF73',mode:'timed'},
-  {id:76,meal:'sandwich',duration:10,mystery:4,mealCount:20,label:'Level 76',emoji:'\uD83E\uDD6A',mode:'timed'},
-  {id:77,meal:'sandwich',duration:10,mystery:4,mealCount:20,label:'Level 77',emoji:'\uD83E\uDD6A',mode:'timed'},
-  {id:78,meal:'hotdog',duration:12,mystery:4,mealCount:20,label:'Level 78',emoji:'\uD83C\uDF2D',mode:'moves',maxTaps:148},
-  {id:79,meal:'hotdog',duration:10,mystery:4,mealCount:20,label:'Level 79',emoji:'\uD83C\uDF2D',mode:'timed'},
-  {id:80,meal:'meatorama',duration:30,mystery:4,mealCount:1,label:'MEAT-O-RAMA',emoji:'\uD83E\uDD69',mode:'timed'},
-  {id:81,meal:'hamburger',duration:10,mystery:4,mealCount:20,label:'Level 81',emoji:'\uD83C\uDF54',mode:'timed'},
-  {id:82,meal:'sandwich',duration:9,mystery:4,mealCount:20,label:'Level 82',emoji:'\uD83E\uDD6A',mode:'timed'},
-  {id:83,meal:'hamburger',duration:12,mystery:4,mealCount:20,label:'Level 83',emoji:'\uD83C\uDF54',mode:'moves',maxTaps:149},
-  {id:84,meal:'hamburger',duration:9,mystery:4,mealCount:20,label:'Level 84',emoji:'\uD83C\uDF54',mode:'timed'},
-  {id:85,meal:'taco',duration:30,mystery:4,mealCount:1,label:'TACO TUESDAY',emoji:'\uD83C\uDF2E',mode:'timed'},
-  {id:86,meal:'hotdog',duration:9,mystery:4,mealCount:20,label:'Level 86',emoji:'\uD83C\uDF2D',mode:'timed'},
-  {id:87,meal:'hamburger',duration:9,mystery:4,mealCount:20,label:'Level 87',emoji:'\uD83C\uDF54',mode:'timed'},
-  {id:88,meal:'hotdog',duration:12,mystery:4,mealCount:20,label:'Level 88',emoji:'\uD83C\uDF2D',mode:'moves',maxTaps:149},
-  {id:89,meal:'sandwich',duration:9,mystery:4,mealCount:20,label:'Level 89',emoji:'\uD83E\uDD6A',mode:'timed'},
-  {id:90,meal:'veggie',duration:30,mystery:4,mealCount:1,label:'CHEF VEGGIE',emoji:'\uD83E\uDD57',mode:'timed'},
-  {id:91,meal:'hotdog',duration:9,mystery:4,mealCount:20,label:'Level 91',emoji:'\uD83C\uDF2D',mode:'timed'},
-  {id:92,meal:'hamburger',duration:9,mystery:4,mealCount:20,label:'Level 92',emoji:'\uD83C\uDF54',mode:'timed'},
-  {id:93,meal:'sandwich',duration:12,mystery:4,mealCount:20,label:'Level 93',emoji:'\uD83E\uDD6A',mode:'moves',maxTaps:149},
-  {id:94,meal:'hamburger',duration:8,mystery:4,mealCount:20,label:'Level 94',emoji:'\uD83C\uDF54',mode:'timed'},
-  {id:95,meal:'pizza',duration:30,mystery:4,mealCount:1,label:'CHEF PIZZA',emoji:'\uD83C\uDF55',mode:'timed'},
-  {id:96,meal:'hotdog',duration:8,mystery:4,mealCount:20,label:'Level 96',emoji:'\uD83C\uDF2D',mode:'timed'},
-  {id:97,meal:'hotdog',duration:8,mystery:4,mealCount:20,label:'Level 97',emoji:'\uD83C\uDF2D',mode:'timed'},
-  {id:98,meal:'hamburger',duration:12,mystery:4,mealCount:20,label:'Level 98',emoji:'\uD83C\uDF54',mode:'moves',maxTaps:149},
-  {id:99,meal:'hamburger',duration:7,mystery:4,mealCount:20,label:'Level 99',emoji:'\uD83C\uDF54',mode:'timed'}
+  {id:1,meal:'hamburger',duration:45,mystery:0,mealCount:1,label:'Level 1',emoji:'\uD83C\uDF54',mode:'timed',hazard:'regular'},
+  {id:2,meal:'hotdog',duration:40,mystery:0,mealCount:2,label:'Level 2',emoji:'\uD83C\uDF2D',mode:'timed',hazard:'regular'},
+  {id:3,meal:'sandwich',duration:38,mystery:0,mealCount:3,label:'Level 3',emoji:'\uD83E\uDD6A',mode:'moves',hazard:'regular',maxTaps:42},
+  {id:4,meal:'sandwich',duration:35,mystery:0,mealCount:4,label:'Level 4',emoji:'\uD83E\uDD6A',mode:'timed',hazard:'blind'},
+  {id:5,meal:'hamburger',duration:35,mystery:0,mealCount:5,label:'Level 5',emoji:'\uD83C\uDF54',mode:'timed',hazard:'regular'},
+  {id:6,meal:'hotdog',duration:30,mystery:0,mealCount:6,label:'Level 6',emoji:'\uD83C\uDF2D',mode:'timed',hazard:'moldy'},
+  {id:7,meal:'hotdog',duration:28,mystery:0,mealCount:7,label:'Level 7',emoji:'\uD83C\uDF2D',mode:'timed',hazard:'frozen'},
+  {id:8,meal:'sandwich',duration:37,mystery:0,mealCount:8,label:'Level 8',emoji:'\uD83E\uDD6A',mode:'moves',hazard:'blind',maxTaps:62},
+  {id:9,meal:'hamburger',duration:25,mystery:0,mealCount:9,label:'Level 9',emoji:'\uD83C\uDF54',mode:'timed',hazard:'moldy'},
+  {id:10,meal:'meatorama',duration:30,mystery:1,mealCount:1,label:'MEAT-O-RAMA',emoji:'\uD83E\uDD69',mode:'timed',hazard:'chef'},
+  {id:11,meal:'sandwich',duration:25,mystery:1,mealCount:12,label:'Level 11',emoji:'\uD83E\uDD6A',mode:'timed',hazard:'regular'},
+  {id:12,meal:'hotdog',duration:24,mystery:1,mealCount:12,label:'Level 12',emoji:'\uD83C\uDF2D',mode:'timed',hazard:'blind'},
+  {id:13,meal:'hotdog',duration:31,mystery:1,mealCount:12,label:'Level 13',emoji:'\uD83C\uDF2D',mode:'moves',hazard:'regular',maxTaps:89},
+  {id:14,meal:'hamburger',duration:23,mystery:1,mealCount:12,label:'Level 14',emoji:'\uD83C\uDF54',mode:'timed',hazard:'frozen'},
+  {id:15,meal:'sandwich',duration:22,mystery:1,mealCount:12,label:'Level 15',emoji:'\uD83E\uDD6A',mode:'timed',hazard:'moldy'},
+  {id:16,meal:'sandwich',duration:22,mystery:1,mealCount:12,label:'Level 16',emoji:'\uD83E\uDD6A',mode:'timed',hazard:'blind'},
+  {id:17,meal:'hotdog',duration:21,mystery:1,mealCount:12,label:'Level 17',emoji:'\uD83C\uDF2D',mode:'timed',hazard:'regular'},
+  {id:18,meal:'hamburger',duration:26,mystery:1,mealCount:12,label:'Level 18',emoji:'\uD83C\uDF54',mode:'moves',hazard:'moldy',maxTaps:89},
+  {id:19,meal:'hamburger',duration:20,mystery:1,mealCount:12,label:'Level 19',emoji:'\uD83C\uDF54',mode:'timed',hazard:'regular'},
+  {id:20,meal:'veggie',duration:30,mystery:2,mealCount:1,label:'CHEF VEGGIE',emoji:'\uD83E\uDD57',mode:'timed',hazard:'chef'},
+  {id:21,meal:'taco',duration:20,mystery:2,mealCount:12,label:'Level 21',emoji:'\uD83C\uDF2E',mode:'timed',hazard:'frozen'},
+  {id:22,meal:'taco',duration:19,mystery:2,mealCount:12,label:'Level 22',emoji:'\uD83C\uDF2E',mode:'timed',hazard:'regular'},
+  {id:23,meal:'taco',duration:20,mystery:2,mealCount:12,label:'Level 23',emoji:'\uD83C\uDF2E',mode:'moves',hazard:'regular',maxTaps:90},
+  {id:24,meal:'taco',duration:18,mystery:2,mealCount:12,label:'Level 24',emoji:'\uD83C\uDF2E',mode:'timed',hazard:'blind'},
+  {id:25,meal:'taco',duration:18,mystery:2,mealCount:12,label:'Level 25',emoji:'\uD83C\uDF2E',mode:'timed',hazard:'regular'},
+  {id:26,meal:'taco',duration:18,mystery:2,mealCount:12,label:'Level 26',emoji:'\uD83C\uDF2E',mode:'timed',hazard:'burnt'},
+  {id:27,meal:'taco',duration:17,mystery:2,mealCount:12,label:'Level 27',emoji:'\uD83C\uDF2E',mode:'timed',hazard:'moldy'},
+  {id:28,meal:'taco',duration:14,mystery:2,mealCount:12,label:'Level 28',emoji:'\uD83C\uDF2E',mode:'moves',hazard:'blind',maxTaps:90},
+  {id:29,meal:'taco',duration:16,mystery:2,mealCount:12,label:'Level 29',emoji:'\uD83C\uDF2E',mode:'timed',hazard:'regular'},
+  {id:30,meal:'candy',duration:30,mystery:3,mealCount:1,label:'CANDY BOSS',emoji:'\uD83C\uDF6C',mode:'timed',hazard:'chef'},
+  {id:31,meal:'taco',duration:16,mystery:3,mealCount:15,label:'Level 31',emoji:'\uD83C\uDF2E',mode:'timed',hazard:'regular'},
+  {id:32,meal:'taco',duration:15,mystery:3,mealCount:15,label:'Level 32',emoji:'\uD83C\uDF2E',mode:'timed',hazard:'blind'},
+  {id:33,meal:'taco',duration:12,mystery:3,mealCount:15,label:'Level 33',emoji:'\uD83C\uDF2E',mode:'moves',hazard:'moldy',maxTaps:111},
+  {id:34,meal:'taco',duration:15,mystery:3,mealCount:15,label:'Level 34',emoji:'\uD83C\uDF2E',mode:'timed',hazard:'regular'},
+  {id:35,meal:'taco',duration:15,mystery:3,mealCount:15,label:'Level 35',emoji:'\uD83C\uDF2E',mode:'timed',hazard:'regular'},
+  {id:36,meal:'taco',duration:14,mystery:3,mealCount:15,label:'Level 36',emoji:'\uD83C\uDF2E',mode:'timed',hazard:'blind'},
+  {id:37,meal:'taco',duration:14,mystery:3,mealCount:15,label:'Level 37',emoji:'\uD83C\uDF2E',mode:'timed',hazard:'regular'},
+  {id:38,meal:'taco',duration:12,mystery:3,mealCount:15,label:'Level 38',emoji:'\uD83C\uDF2E',mode:'moves',hazard:'burnt',maxTaps:111},
+  {id:39,meal:'taco',duration:14,mystery:3,mealCount:15,label:'Level 39',emoji:'\uD83C\uDF2E',mode:'timed',hazard:'moldy'},
+  {id:40,meal:'breakfast',duration:30,mystery:3,mealCount:1,label:'CHEF BREAKFAST',emoji:'\uD83C\uDF73',mode:'timed',hazard:'chef'},
+  {id:41,meal:'hamburger',duration:14,mystery:3,mealCount:15,label:'Level 41',emoji:'\uD83C\uDF54',mode:'timed',hazard:'regular'},
+  {id:42,meal:'hotdog',duration:13,mystery:3,mealCount:15,label:'Level 42',emoji:'\uD83C\uDF2D',mode:'timed',hazard:'frozen'},
+  {id:43,meal:'hamburger',duration:12,mystery:3,mealCount:15,label:'Level 43',emoji:'\uD83C\uDF54',mode:'moves',hazard:'regular',maxTaps:112},
+  {id:44,meal:'hamburger',duration:13,mystery:3,mealCount:15,label:'Level 44',emoji:'\uD83C\uDF54',mode:'timed',hazard:'blind'},
+  {id:45,meal:'sandwich',duration:13,mystery:3,mealCount:15,label:'Level 45',emoji:'\uD83E\uDD6A',mode:'timed',hazard:'moldy'},
+  {id:46,meal:'hotdog',duration:13,mystery:3,mealCount:15,label:'Level 46',emoji:'\uD83C\uDF2D',mode:'timed',hazard:'regular'},
+  {id:47,meal:'hotdog',duration:13,mystery:3,mealCount:15,label:'Level 47',emoji:'\uD83C\uDF2D',mode:'timed',hazard:'regular'},
+  {id:48,meal:'sandwich',duration:12,mystery:3,mealCount:15,label:'Level 48',emoji:'\uD83E\uDD6A',mode:'moves',hazard:'blind',maxTaps:112},
+  {id:49,meal:'hotdog',duration:13,mystery:3,mealCount:15,label:'Level 49',emoji:'\uD83C\uDF2D',mode:'timed',hazard:'frozen'},
+  {id:50,meal:'taco',duration:30,mystery:3,mealCount:1,label:'TACO BOSS',emoji:'\uD83C\uDF2E',mode:'timed',hazard:'chef'},
+  {id:51,meal:'hamburger',duration:13,mystery:3,mealCount:15,label:'Level 51',emoji:'\uD83C\uDF54',mode:'timed',hazard:'moldy'},
+  {id:52,meal:'hamburger',duration:12,mystery:3,mealCount:15,label:'Level 52',emoji:'\uD83C\uDF54',mode:'timed',hazard:'blind'},
+  {id:53,meal:'hotdog',duration:12,mystery:3,mealCount:15,label:'Level 53',emoji:'\uD83C\uDF2D',mode:'moves',hazard:'regular',maxTaps:112},
+  {id:54,meal:'hamburger',duration:12,mystery:3,mealCount:15,label:'Level 54',emoji:'\uD83C\uDF54',mode:'timed',hazard:'moldy'},
+  {id:55,meal:'sandwich',duration:12,mystery:3,mealCount:15,label:'Level 55',emoji:'\uD83E\uDD6A',mode:'timed',hazard:'regular'},
+  {id:56,meal:'hotdog',duration:12,mystery:3,mealCount:15,label:'Level 56',emoji:'\uD83C\uDF2D',mode:'timed',hazard:'blind'},
+  {id:57,meal:'sandwich',duration:12,mystery:3,mealCount:15,label:'Level 57',emoji:'\uD83E\uDD6A',mode:'timed',hazard:'moldy'},
+  {id:58,meal:'sandwich',duration:12,mystery:3,mealCount:15,label:'Level 58',emoji:'\uD83E\uDD6A',mode:'moves',hazard:'regular',maxTaps:112},
+  {id:59,meal:'hotdog',duration:12,mystery:3,mealCount:15,label:'Level 59',emoji:'\uD83C\uDF2D',mode:'timed',hazard:'regular'},
+  {id:60,meal:'pizza',duration:30,mystery:3,mealCount:1,label:'CHEF PIZZA',emoji:'\uD83C\uDF55',mode:'timed',hazard:'chef'},
+  {id:61,meal:'sandwich',duration:12,mystery:3,mealCount:20,label:'Level 61',emoji:'\uD83E\uDD6A',mode:'timed',hazard:'regular'},
+  {id:62,meal:'hamburger',duration:12,mystery:3,mealCount:20,label:'Level 62',emoji:'\uD83C\uDF54',mode:'timed',hazard:'burnt'},
+  {id:63,meal:'sandwich',duration:12,mystery:3,mealCount:20,label:'Level 63',emoji:'\uD83E\uDD6A',mode:'moves',hazard:'frozen',maxTaps:148},
+  {id:64,meal:'hamburger',duration:11,mystery:3,mealCount:20,label:'Level 64',emoji:'\uD83C\uDF54',mode:'timed',hazard:'blind'},
+  {id:65,meal:'hamburger',duration:11,mystery:3,mealCount:20,label:'Level 65',emoji:'\uD83C\uDF54',mode:'timed',hazard:'regular'},
+  {id:66,meal:'hamburger',duration:11,mystery:3,mealCount:20,label:'Level 66',emoji:'\uD83C\uDF54',mode:'timed',hazard:'moldy'},
+  {id:67,meal:'hamburger',duration:11,mystery:3,mealCount:20,label:'Level 67',emoji:'\uD83C\uDF54',mode:'timed',hazard:'regular'},
+  {id:68,meal:'sandwich',duration:12,mystery:3,mealCount:20,label:'Level 68',emoji:'\uD83E\uDD6A',mode:'moves',hazard:'blind',maxTaps:148},
+  {id:69,meal:'sandwich',duration:11,mystery:3,mealCount:20,label:'Level 69',emoji:'\uD83E\uDD6A',mode:'timed',hazard:'moldy'},
+  {id:70,meal:'sea',duration:30,mystery:3,mealCount:1,label:'SEA BOSS',emoji:'\uD83D\uDC1F',mode:'timed',hazard:'chef'},
+  {id:71,meal:'sandwich',duration:11,mystery:3,mealCount:20,label:'Level 71',emoji:'\uD83E\uDD6A',mode:'timed',hazard:'regular'},
+  {id:72,meal:'hotdog',duration:10,mystery:3,mealCount:20,label:'Level 72',emoji:'\uD83C\uDF2D',mode:'timed',hazard:'blind'},
+  {id:73,meal:'sandwich',duration:12,mystery:3,mealCount:20,label:'Level 73',emoji:'\uD83E\uDD6A',mode:'moves',hazard:'regular',maxTaps:148},
+  {id:74,meal:'hotdog',duration:10,mystery:3,mealCount:20,label:'Level 74',emoji:'\uD83C\uDF2D',mode:'timed',hazard:'burnt'},
+  {id:75,meal:'hamburger',duration:10,mystery:3,mealCount:20,label:'Level 75',emoji:'\uD83C\uDF54',mode:'timed',hazard:'moldy'},
+  {id:76,meal:'sandwich',duration:10,mystery:3,mealCount:20,label:'Level 76',emoji:'\uD83E\uDD6A',mode:'timed',hazard:'blind'},
+  {id:77,meal:'sandwich',duration:10,mystery:3,mealCount:20,label:'Level 77',emoji:'\uD83E\uDD6A',mode:'timed',hazard:'frozen'},
+  {id:78,meal:'hotdog',duration:12,mystery:3,mealCount:20,label:'Level 78',emoji:'\uD83C\uDF2D',mode:'moves',hazard:'moldy',maxTaps:148},
+  {id:79,meal:'hotdog',duration:10,mystery:3,mealCount:20,label:'Level 79',emoji:'\uD83C\uDF2D',mode:'timed',hazard:'regular'},
+  {id:80,meal:'meatorama',duration:30,mystery:3,mealCount:1,label:'MEAT-O-RAMA II',emoji:'\uD83E\uDD69',mode:'timed',hazard:'chef'},
+  {id:81,meal:'hamburger',duration:10,mystery:3,mealCount:20,label:'Level 81',emoji:'\uD83C\uDF54',mode:'timed',hazard:'moldy'},
+  {id:82,meal:'sandwich',duration:9,mystery:3,mealCount:20,label:'Level 82',emoji:'\uD83E\uDD6A',mode:'timed',hazard:'regular'},
+  {id:83,meal:'hamburger',duration:12,mystery:3,mealCount:20,label:'Level 83',emoji:'\uD83C\uDF54',mode:'moves',hazard:'regular',maxTaps:149},
+  {id:84,meal:'hamburger',duration:9,mystery:3,mealCount:20,label:'Level 84',emoji:'\uD83C\uDF54',mode:'timed',hazard:'blind'},
+  {id:85,meal:'hotdog',duration:9,mystery:3,mealCount:20,label:'Level 85',emoji:'\uD83C\uDF2D',mode:'timed',hazard:'regular'},
+  {id:86,meal:'hotdog',duration:9,mystery:3,mealCount:20,label:'Level 86',emoji:'\uD83C\uDF2D',mode:'timed',hazard:'burnt'},
+  {id:87,meal:'hamburger',duration:9,mystery:3,mealCount:20,label:'Level 87',emoji:'\uD83C\uDF54',mode:'timed',hazard:'moldy'},
+  {id:88,meal:'hotdog',duration:12,mystery:3,mealCount:20,label:'Level 88',emoji:'\uD83C\uDF2D',mode:'moves',hazard:'blind',maxTaps:149},
+  {id:89,meal:'sandwich',duration:9,mystery:3,mealCount:20,label:'Level 89',emoji:'\uD83E\uDD6A',mode:'timed',hazard:'regular'},
+  {id:90,meal:'veggie',duration:30,mystery:3,mealCount:1,label:'CHEF VEGGIE II',emoji:'\uD83E\uDD57',mode:'timed',hazard:'chef'},
+  {id:91,meal:'hotdog',duration:9,mystery:3,mealCount:20,label:'Level 91',emoji:'\uD83C\uDF2D',mode:'timed',hazard:'frozen'},
+  {id:92,meal:'hamburger',duration:9,mystery:3,mealCount:20,label:'Level 92',emoji:'\uD83C\uDF54',mode:'timed',hazard:'blind'},
+  {id:93,meal:'sandwich',duration:12,mystery:3,mealCount:20,label:'Level 93',emoji:'\uD83E\uDD6A',mode:'moves',hazard:'moldy',maxTaps:149},
+  {id:94,meal:'hamburger',duration:8,mystery:3,mealCount:20,label:'Level 94',emoji:'\uD83C\uDF54',mode:'timed',hazard:'regular'},
+  {id:95,meal:'hotdog',duration:8,mystery:3,mealCount:20,label:'Level 95',emoji:'\uD83C\uDF2D',mode:'timed',hazard:'regular'},
+  {id:96,meal:'hotdog',duration:8,mystery:3,mealCount:20,label:'Level 96',emoji:'\uD83C\uDF2D',mode:'timed',hazard:'blind'},
+  {id:97,meal:'hotdog',duration:8,mystery:3,mealCount:20,label:'Level 97',emoji:'\uD83C\uDF2D',mode:'timed',hazard:'regular'},
+  {id:98,meal:'hamburger',duration:12,mystery:3,mealCount:20,label:'Level 98',emoji:'\uD83C\uDF54',mode:'moves',hazard:'frozen',maxTaps:149},
+  {id:99,meal:'hamburger',duration:7,mystery:3,mealCount:20,label:'FINAL BOSS',emoji:'\uD83C\uDF54',mode:'timed',hazard:'boss'}
 ];
 
 /* ═══════════════════════════════════════════
@@ -2913,25 +2953,23 @@ function makeRound(rec, nm) {
   var ids = shuffle(freshIds.concat(decoyIds));
   var ts = Date.now();
   var result = ids.map(function(ingId, i) { return {key:'i'+ts+i, type:'ing', ingId:ingId, spoiled:false}; });
-  /* Mold mechanic: Level 6+ — replace 2 decoy slots with moldy required-ingredient dupes */
-  if (G.level && G.level.id >= 6 && freshIds.length >= 2) {
+  /* Mold mechanic: hazard === 'moldy' — replace 2 decoy slots with moldy required-ingredient dupes */
+  if (G.level && G.level.hazard === 'moldy' && freshIds.length >= 2) {
     var moldCount = 2;
     var moldTargets = shuffle(freshIds.slice()).slice(0, moldCount);
     var replaced = 0;
     for (var j = result.length - 1; j >= 0 && replaced < moldCount; j--) {
-      /* Replace a decoy (not a fresh required tile) */
       if (!ns[result[j].ingId]) {
         result[j] = {key:'mold'+ts+j, type:'ing', ingId:moldTargets[replaced], spoiled:true, burnt:false};
         replaced++;
       }
     }
   }
-  /* Burnt mechanic: Level 10+ — replace 1 decoy slot with a burnt required-ingredient dupe */
-  if (G.level && G.level.id >= 10 && freshIds.length >= 1) {
+  /* Burnt mechanic: hazard === 'burnt' — replace 1 decoy slot with a burnt required-ingredient dupe */
+  if (G.level && G.level.hazard === 'burnt' && freshIds.length >= 1) {
     var burntTargets = shuffle(freshIds.slice()).slice(0, 1);
     var breplaced = 0;
     for (var k = result.length - 1; k >= 0 && breplaced < 1; k--) {
-      /* Replace a decoy that isn't already moldy */
       if (!ns[result[k].ingId] && !result[k].spoiled) {
         result[k] = {key:'burnt'+ts+k, type:'ing', ingId:burntTargets[0], spoiled:false, burnt:true};
         breplaced++;
@@ -3019,8 +3057,12 @@ function startGame(lid) {
   /* Tutorial intercepts timer start on L1 first-ever play */
   if (G.level.id === 1 && TUT.show()) {
     /* TUT._close() will restart timer when dismissed */
-  } else if (G.level.id === 6 && MOLD_TUT.show()) {
+  } else if (G.level.hazard === 'moldy' && G.level.id === 6 && MOLD_TUT.show()) {
     /* MOLD_TUT._close() will restart timer when dismissed */
+  } else if (G.level.hazard === 'blind' && G.level.id === 4 && BLIND_TUT.show()) {
+    /* BLIND_TUT._close() will restart timer when dismissed */
+  } else if (G.level.hazard === 'chef' && G.level.id === 10 && MYST_TUT.show()) {
+    /* MYST_TUT._close() will restart timer when dismissed */
   } else if (G.mode === 'moves') {
     /* No countdown timer for moves-based levels — tapsLeft drives failure */
   } else {
@@ -3320,11 +3362,23 @@ function renderGame() {
   }).join('');
 
   /* Checklist */
+  var isBlindLevel = G.level && G.level.hazard === 'blind';
   var chk = rec.needs.map(function(id, i) {
     var done = i < G.seqIdx, next = i === G.seqIdx, ing = IM[id];
     var slotBg = done ? '' : 'background:' + (next ? ing.bg : 'rgba(255,255,255,.07)') + ';';
     var slotCls = done ? ' done' : next ? ' next' : '';
     var glowStyle = next ? 'animation:nextGlow 1.2s ease-in-out infinite;' : '';
+    /* Blind level — hide unfinished slots as ? */
+    if (isBlindLevel && !done) {
+      var blindBg = next ? 'background:rgba(92,107,192,.25);' : 'background:rgba(255,255,255,.07);';
+      var blindGlow = next ? 'animation:blindPulse 1.6s ease-in-out infinite;' : '';
+      return '<div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1">' +
+        '<div class="chk-slot' + slotCls + '" style="' + blindBg + blindGlow + '">' +
+          '<span style="font-size:16px;opacity:.6">\u2753</span>' +
+        '</div>' +
+        '<div class="chk-lbl' + (next ? ' next' : '') + '" style="color:rgba(197,202,233,.5)">?</div>' +
+      '</div>';
+    }
     return '<div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1">' +
       '<div class="chk-slot' + slotCls + '" style="' + slotBg + glowStyle + '">' +
         (done ? '<span style="font-size:13px;font-weight:700;color:#27AE60">\u2713</span>' : foodSVG(id, 24)) +
@@ -3459,7 +3513,7 @@ function renderGame() {
       (G.seqIdx < rec.needs.length ?
         '<div style="margin-top:6px;font-size:10px;color:#FFD700;font-weight:700;display:flex;align-items:center;gap:5px">' +
           '<span style="background:rgba(255,215,0,.14);border:1px solid rgba(255,215,0,.38);border-radius:5px;padding:2px 7px;display:flex;align-items:center;gap:3px">' +
-            'NEXT: ' + foodSVG(nextId, 18) + ' ' + (IM[nextId] ? IM[nextId].label : '') +
+            (isBlindLevel ? 'NEXT: \u2753' : 'NEXT: ' + foodSVG(nextId, 18) + ' ' + (IM[nextId] ? IM[nextId].label : '')) +
           '</span>' +
           '<span style="color:rgba(255,208,160,.48)">(' + (G.seqIdx + 1) + '/' + rec.needs.length + ')</span>' +
         '</div>' : '') +
@@ -3501,7 +3555,10 @@ if (_el_gamescreen) _el_gamescreen.addEventListener('click', function(e) {
   /* Burnt tile taps — intercept before normal tile logic */
   var bTile = e.target.closest('[data-status="burnt"]');
   if (bTile && G.phase === 'playing') { showBurntPopup(); return; }
-  /* Normal tile taps */
+  /* Blind tile — single tap, player guesses by memory.
+     No reveal step. Falls straight through to tapTile which
+     handles correct / wrong logic exactly like a normal tile. */
+  /* Normal tile taps (blind tiles included — they share data-key) */
   var tile = e.target.closest('[data-key]');
   if (tile && tile.dataset.key) tapTile(tile.dataset.key);
 });
@@ -4071,6 +4128,174 @@ function showBurntPopup() {
   setTimeout(function(){ if(pop.parentNode) pop.parentNode.removeChild(pop); }, 1350);
   renderGame();
 }
+
+/* ── BLIND ORDER TUTORIAL ────────────────────────────────────── */
+/* ── MYSTERY BOX TUTORIAL (Level 10) ────────────────────────── */
+var MYST_TUT = {
+  _step: 0,
+  _steps: [
+    {
+      arrow: '\u2B07\uFE0F',
+      arrowLabel: 'See the purple box?',
+      msg: 'Chef Henry here! \uD83D\uDC68\u200D\uD83C\uDF73 That \uD83D\uDFE3 MYSTERY BOX is wild — tap it and something random happens. Could save you, could hurt you!',
+      btn: 'What\'s inside? \uD83D\uDC40'
+    },
+    {
+      arrow: '\u2B07\uFE0F',
+      arrowLabel: 'Three possible outcomes!',
+      msg: '\u2B50 Auto-completes 2 ingredients!\n\u23F1 Adds bonus seconds!\n\uD83D\uDC80 Removes 1 ingredient!\n\n\u26A0\uFE0F One rule: tap it AFTER you\'ve started your order — or nothing happens!',
+      example: true,
+      btn: 'Got it! Let\'s Cook! \uD83C\uDF73'
+    }
+  ],
+  show: function() {
+    this._step = 0;
+    try { this._render(); } catch(e) { console.warn('MYST_TUT:', e); return false; }
+    return true;
+  },
+  _render: function() {
+    var el = document.getElementById('myst-tut-overlay');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'myst-tut-overlay';
+      document.body.appendChild(el);
+    }
+    var s = this._steps[this._step];
+    var dots = this._steps.map(function(_, i) {
+      return '<div class="tut-dot' + (i === MYST_TUT._step ? ' active' : '') + '"></div>';
+    }).join('');
+    var exampleHTML = s.example ?
+      '<div style="display:flex;justify-content:center;gap:10px;background:rgba(0,0,0,.35);border-radius:10px;padding:9px 12px;margin:8px 0">'
+      + '<div style="text-align:center">'
+      +   '<div style="font-size:22px">\u2B50</div>'
+      +   '<div style="font-size:9px;color:#FFE566;font-weight:700">+2 done</div>'
+      + '</div>'
+      + '<div style="text-align:center">'
+      +   '<div style="font-size:22px">\u23F1</div>'
+      +   '<div style="font-size:9px;color:#5DADE2;font-weight:700">+secs</div>'
+      + '</div>'
+      + '<div style="text-align:center">'
+      +   '<div style="font-size:22px">\uD83D\uDC80</div>'
+      +   '<div style="font-size:9px;color:#E74C3C;font-weight:700">-1 back</div>'
+      + '</div>'
+      + '</div>' : '';
+    el.style.cssText = 'position:fixed;inset:0;z-index:980;background:rgba(0,0,0,.82);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:28px;animation:tutFadeIn .35s ease';
+    el.innerHTML =
+      '<div class="tut-arrow-wrap">'
+      + '<div class="tut-arrow-label">' + s.arrowLabel + '</div>'
+      + '<div class="tut-arrow">' + s.arrow + '</div>'
+      + '</div>'
+      + '<div class="tut-henry-wrap">'
+      + '<img src="' + TUT._img + '" class="tut-henry-img" alt="Chef Henry"/>'
+      + '</div>'
+      + '<div class="tut-card">'
+      +   '<div class="tut-header">'
+      +     '<span class="tut-henry-name">\uD83D\uDC68\u200D\uD83C\uDF73 Chef Henry says...</span>'
+      +     '<div class="tut-step-dots">' + dots + '</div>'
+      +   '</div>'
+      +   '<div class="tut-msg" style="white-space:pre-line">' + s.msg + '</div>'
+      +   exampleHTML
+      +   '<div class="tut-footer">'
+      +     '<button id="myst-tut-skip" onclick="MYST_TUT.skip()">Skip</button>'
+      +     '<button class="tut-next-btn" onclick="MYST_TUT.next()">' + s.btn + '</button>'
+      +   '</div>'
+      + '</div>';
+  },
+  next: function() {
+    this._step++;
+    if (this._step >= this._steps.length) this._close();
+    else this._render();
+  },
+  skip: function() { this._close(); },
+  _close: function() {
+    var el = document.getElementById('myst-tut-overlay');
+    if (el) el.remove();
+    clearInterval(G._timer);
+    G._timer = setInterval(tick, 1000);
+  }
+};
+
+var BLIND_TUT = {
+  _step: 0,
+  _steps: [
+    {
+      arrow: '\u2B07\uFE0F',
+      arrowLabel: 'Watch the grid!',
+      msg: 'Uh oh, Chef! \uD83D\uDE10 Some ingredients have been COVERED UP! You can\'t see what\'s hiding under those \u2753 tiles until you tap them!',
+      btn: 'Show me! \uD83D\uDC40'
+    },
+    {
+      arrow: '\u2B07\uFE0F',
+      arrowLabel: 'Two taps to collect!',
+      msg: '\u0031\uFE0F\u20E3 TAP once to REVEAL what\'s underneath. \u0032\uFE0F\u20E3 TAP again to COLLECT it. Get your order right or Chef Henry will be furious! \uD83D\uDE21',
+      example: true,
+      btn: "Got it! Let\u2019s Cook! \uD83C\uDF73"
+    }
+  ],
+  show: function() {
+    this._step = 0;
+    try { this._render(); } catch(e) { console.warn('BLIND_TUT:', e); return false; }
+    return true;
+  },
+  _render: function() {
+    var el = document.getElementById('blind-tut-overlay');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'blind-tut-overlay';
+      document.body.appendChild(el);
+    }
+    var s = this._steps[this._step];
+    var dots = this._steps.map(function(_, i) {
+      return '<div class="tut-dot' + (i === BLIND_TUT._step ? ' active' : '') + '"></div>';
+    }).join('');
+    var exampleHTML = s.example ?
+      '<div style="display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.35);border-radius:10px;padding:9px 12px;margin:8px 0">'
+      + '<div style="position:relative;width:44px;height:44px;background:linear-gradient(135deg,#1A237E,#283593);border-radius:9px;border:2px solid #5C6BC0;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0">'
+      +   '<div style="font-size:20px">\u2753</div>'
+      +   '<div style="font-size:7px;color:#C5CAE9">Tap to peek</div>'
+      + '</div>'
+      + '<div style="font-size:13px;color:#fff">\u2794</div>'
+      + '<div style="position:relative;width:44px;height:44px;background:linear-gradient(135deg,#4A148C,#6A1B9A);border-radius:9px;border:2px solid #CE93D8;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0">'
+      +   '<div style="font-size:20px">\uD83C\uDF45</div>'
+      +   '<div style="font-size:7px;color:#EF9A9A">Tap again!</div>'
+      + '</div>'
+      + '<div style="font-size:12px;line-height:1.5;color:#FFE566;font-weight:700">&#x2190; Two taps to collect!<br><span style="color:rgba(255,255,255,.75);font-weight:400">Reveal first, then confirm!</span></div>'
+      + '</div>' : '';
+    el.style.cssText = 'position:fixed;inset:0;z-index:980;background:rgba(0,0,0,.82);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:28px;animation:tutFadeIn .35s ease';
+    el.innerHTML =
+      '<div class="tut-arrow-wrap">'
+      + '<div class="tut-arrow-label">' + s.arrowLabel + '</div>'
+      + '<div class="tut-arrow">' + s.arrow + '</div>'
+      + '</div>'
+      + '<div class="tut-henry-wrap">'
+      + '<img src="' + TUT._img + '" class="tut-henry-img" alt="Chef Henry"/>'
+      + '</div>'
+      + '<div class="tut-card">'
+      +   '<div class="tut-header">'
+      +     '<span class="tut-henry-name">\uD83D\uDC68\u200D\uD83C\uDF73 Chef Henry says...</span>'
+      +     '<div class="tut-step-dots">' + dots + '</div>'
+      +   '</div>'
+      +   '<div class="tut-msg">' + s.msg + '</div>'
+      +   exampleHTML
+      +   '<div class="tut-footer">'
+      +     '<button id="blind-tut-skip" onclick="BLIND_TUT.skip()">Skip</button>'
+      +     '<button class="tut-next-btn" onclick="BLIND_TUT.next()">' + s.btn + '</button>'
+      +   '</div>'
+      + '</div>';
+  },
+  next: function() {
+    this._step++;
+    if (this._step >= this._steps.length) this._close();
+    else this._render();
+  },
+  skip: function() { this._close(); },
+  _close: function() {
+    var el = document.getElementById('blind-tut-overlay');
+    if (el) el.remove();
+    clearInterval(G._timer);
+    G._timer = setInterval(tick, 1000);
+  }
+};
 
 
 var MOLD_TUT = {
